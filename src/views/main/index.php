@@ -3,48 +3,52 @@
     bundle\View::render('layouts/header.php');
 ?>
 <div class="mid">
-    <h3>Popular Films</h3>
-    <hr>
-    <div class="sim-slider">
-        <ul class="sim-slider-list">
-            <li>
-                <div class="screen"></div>
-            </li>
-            <?php foreach ($popularFilms as $key => $film) { ?>
-                <li class="sim-slider-element">
-                    <img class="poster" src="<?php echo $film['poster']; ?>" alt="<?php echo $key; ?>">
-                    <div class="sim-slider-film-info">
-                        <h3><?php echo $film['caption']; ?></h3>
-                        <small class="sim-slider-film-info_description"><?php echo mb_strimwidth($film['description'], 0, 100, '...'); ?></small>
-                        <a href="/films/<?php echo $film['id_film']; ?>" class="btn btn-danger m-top">More</a>
-                    </div>
-                </li>
-            <?php } ?>
-        </ul>
-        <div class="sim-slider-arrow-left"></div>
-        <div class="sim-slider-arrow-right"></div>
-        <div class="sim-slider-dots"></div>
-    </div>
-    <h3>All Films</h3>
-    <hr>
-    <div class="films-list">
-        <?php foreach ($films as $key => $film) { ?>
-            <div class="film-item">
-                <img class="poster" src="<?php echo $film['poster']; ?>" alt="<?php echo $key; ?>">
-                <div class="sim-slider-film-info">
-                    <h3><a href="/films/<?php echo $film['id'];?>"><?php echo $film['caption']; ?></a></h3>
-                    <small class="sim-slider-film-info_description"><?php echo mb_strimwidth($film['description'], 0, 100, '...'); ?></small>
-                    <?php foreach ($sessions as $session) { ?>
-                        <span class="badge badge-info m-top"><?php echo $session['caption']; ?></span>
-                    <?php } ?>
+    <div class="my-row">
+        <h3>All Tasks</h3>
+        <div class="btn-group">
+            <div class="btn-group">
+                <button type="button" class="btn btn-outline-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Sorting
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#">Name</a>
+                    <a class="dropdown-item" href="#">Email</a>
+                    <a class="dropdown-item" href="#">Status</a>
                 </div>
             </div>
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addTask">Add Task</button>
+        </div>
+    </div>
+    <hr>
+    <div class="list">
+        <?php if (empty($tasks)) { ?>
+            <div class="empty">
+                <span>No one added tasks.</span>
+            </div>
+        <?php } else { ?>
+            <?php foreach ($tasks as $key => $task) { ?>
+                <div class="list-item">
+                    <div class="list-item-head">
+                        <span class="badge badge-success"><?php echo ucfirst($task['status']); ?></span>
+                    </div>
+                    <small>Имя пользователя: <b><?php echo $task['author']; ?></b></small>
+                    <small>Текст задачи: <?php echo $task['text']; ?></small>
+                </div>
+            <?php } ?>
         <?php } ?>
     </div>
+    <?php
+        $paginator = new \utils\Paginator();
+        $paginator->render($currentPage, $cntPage);
+    ?>
 </div>
 
-<script>new Sim()</script>
-
 <?php
+    bundle\View::render('layouts/default/modal.php', [
+        'title'     => 'Add Task',
+        'ident'     => 'addTask',
+        'actionUrl' => 'tasks/add'
+    ]);
+
     bundle\View::render('layouts/default/footer.php');
 ?>

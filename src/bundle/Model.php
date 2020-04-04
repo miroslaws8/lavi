@@ -6,38 +6,59 @@ use PDO;
 
 class Model
 {
-    private $connection = null;
-    private $statement  = null;
-    private static $database = null;
+    const METHOD_PREFIX = 'do';
 
-    protected static $table = false;
+    protected static $statement = null;
+    protected $connection = null;
+    protected $table      = null;
+
+    private static $database  = null;
 
     public function __construct()
     {
         try {
-            if ($this->connection === null) {
-                $this->connection = new PDO(
-                    'mysql:dbname='.Config::get('DB_NAME').
-                    ';host='.Config::get('DB_HOST').';charset='.Config::get('DB_CHARSET'),
-                    Config::get('DB_USER'),
-                    Config::get('DB_PASS')
-                );
+            $this->connection = new PDO(
+                'mysql:dbname='.Config::get('DB_NAME').
+                ';host='.Config::get('DB_HOST').';charset='.Config::get('DB_CHARSET'),
+                Config::get('DB_USER'),
+                Config::get('DB_PASS')
+            );
 
-                $this->connection->setAttribute(
-                    PDO::ATTR_EMULATE_PREPARES, false
-                );
+            $this->connection->setAttribute(
+                PDO::ATTR_EMULATE_PREPARES, false
+            );
 
-                $this->connection->setAttribute(
-                    PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION
-                );
-            }
+            $this->connection->setAttribute(
+                PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION
+            );
         } catch (\PDOException $exception) {
-            echo 'Fill in the database access and roll the dump in the /dump folder!';
-            exit;
+            throw new \Exception('Fill in the database access and roll the dump in the /dump folder!');
+        }
+
+        if (!$this->table) {
+            $selfReflection = new \ReflectionClass(static::class);
+            $this->table = strtolower($selfReflection->getShortName());
         }
     }
 
-    public static function getConnection()
+    public static function __callStatic($name, $arguments)
+    {
+        $methodName = static::METHOD_PREFIX.ucfirst($name);
+
+        return (new static())->{$methodName}(...$arguments);
+    }
+
+    public static function getTable()
+    {
+        return (new static())->getTableName();
+    }
+
+    public function getTableName()
+    {
+        return $this->table;
+    }
+
+    public function getConnection()
     {
         if (static::$database === null) {
             static::$database = new self();
@@ -46,84 +67,100 @@ class Model
         return static::$database;
     }
 
-    public function prepare(string $query)
+    public function doPrepare(string $query)
     {
-        $this->statement = $this->connection->prepare($query);
+        static::$statement = $this->connection->prepare($query);
     }
 
-    public function countRows()
-    {
-        return $this->statement->rowCount();
-    }
-
-    public function countAll()
-    {
-        $this->statement = $this->connection->prepare(
-            'SELECT COUNT(*) AS count FROM '.static::$table
-        );
-
-        $this->execute();
-
-        return (int) $this->fetchAssociative()["count"];
-    }
-
-    public function getAll(string $orderBy = null)
+    public function doPagination(int $offset, int $limit, ?array $where = null, $orderBy = null)
     {
         if ($orderBy) {
             $orderBy = 'ORDER BY '.$orderBy;
         }
 
-        $this->statement = $this->connection
-            ->prepare('SELECT * FROM '.static::$table.' '.$orderBy);
+        $sql = "SELECT * FROM ".$this->table." ".$where." ".$orderBy.
+            " LIMIT ".$offset.", ".$limit;
 
-        $this->execute();
+        $this->doPrepare($sql);
+        $this->doExecute();
+
+        $items   = $this->fetchAllAssociative();
+        $count   = $this->countAll();
+        $cntPage = (int) ceil($count / $limit);
+
+        return [
+            'items'   => $items,
+            'cntPage' => $cntPage
+        ];
+    }
+
+    public function countAll()
+    {
+        static::$statement = $this->connection
+            ->prepare('SELECT COUNT(*) AS count FROM '.$this->table);
+
+        $this->doExecute();
+
+        return (int) $this->fetchAssociative()["count"];
+    }
+
+    public function doGetAll(string $orderBy = null)
+    {
+        if ($orderBy) {
+            $orderBy = 'ORDER BY '.$orderBy;
+        }
+
+        static::$statement = $this->connection
+            ->prepare('SELECT * FROM '.$this->table.' '.$orderBy);
+
+        $this->doExecute();
 
         return $this->fetchAllAssociative();
     }
 
-    public function insert(array $values)
+    public function doInsert(array $values)
     {
         $maskValues = $this->getPreparedMaskValues($values);
 
         $sql = sprintf(
             'INSERT INTO %s (%s) VALUES (%s)',
-            static::$table,
+            $this->table,
             $maskValues['keys'],
             $maskValues['values']
         );
 
-        $this->statement = $this->connection
+        static::$statement = $this->connection
             ->prepare($sql);
 
-        $this->execute($values);
+        $this->doExecute($values);
     }
 
-    public function update(array $values, int $id)
+    public function doUpdate(array $values, int $id)
     {
         $maskValues = $this->getPreparedUpdateValues($values);
 
         $sql = sprintf(
             'UPDATE %s SET %s WHERE id = %s',
-            static::$table,
+            $this->table,
             $maskValues['keys'],
             $id
         );
 
-        $this->statement = $this->connection
+        static::$statement = $this->connection
             ->prepare($sql);
 
-        $this->execute($maskValues['values']);
+        $this->doExecute($maskValues['values']);
 
         return true;
     }
 
-    public function delete(int $id)
+    public function doDelete(int $id)
     {
-        $this->statement = $this->connection
+        static::$statement = $this->connection
             ->prepare('DELETE FROM '.static::$table.' WHERE id = :id');
 
         $this->bindValue(':id', $id);
-        $this->execute();
+        $this->doExecute();
 
         return true;
     }
@@ -167,40 +204,34 @@ class Model
         ];
     }
 
-    public function getById($id)
+    public function doGetById($id)
     {
-        $this->statement = $this->connection->prepare(
+        static::$statement = $this->connection->prepare(
             'SELECT * FROM '.static::$table. ' WHERE id = :id LIMIT 1'
         );
 
         $this->bindValue(':id', $id);
-        $this->execute();
+        $this->doExecute();
 
         return $this->fetchAssociative();
     }
 
-    public function execute($arr = null)
+    public function doExecute($arr = null)
     {
-        if ($arr !== null) {
-            return $this->statement->execute($arr);
+        if (!$arr) {
+            return static::$statement->execute();
         }
-
-        return $this->statement->execute();
-    }
-
-    public function fetchColumn()
-    {
-        return $this->statement->fetchAll(\PDO::FETCH_COLUMN, 0);
+        return static::$statement->execute($arr);
     }
 
     public function fetchAllAssociative()
     {
-        return $this->statement->fetchAll(\PDO::FETCH_ASSOC);
+        return static::$statement->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     public function fetchAssociative()
     {
-        return $this->statement->fetch(PDO::FETCH_ASSOC);
+        return static::$statement->fetch(PDO::FETCH_ASSOC);
     }
 
     public function lastInsertedId() {
@@ -210,13 +241,13 @@ class Model
     public function bindValue($param, $value)
     {
         $type = $this->getPDOType($value);
-        $this->statement->bindValue($param, $value, $type);
+        static::$statement->bindValue($param, $value, $type);
     }
 
     public function bindParam($param, &$var)
     {
         $type = $this->getPDOType($var);
-        $this->statement->bindParam($param, $var, $type);
+        static::$statement->bindParam($param, $var, $type);
     }
 
     private function getPDOType($value){
@@ -249,10 +280,12 @@ class Model
 
     public static function closeConnection()
     {
-        if(isset(self::$database)) {
-            self::$database->connection = null;
-            self::$database->statement  = null;
-            self::$database             = null;
+        if (empty(self::$database)) {
+            throw new \Exception('Database connection not found!');
         }
+
+        self::$database->connection = null;
+        self::$database->statement  = null;
+        self::$database             = null;
     }
 }

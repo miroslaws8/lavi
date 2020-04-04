@@ -1,6 +1,6 @@
 <?php
 
-require_once 'autoload.php';
+require_once '../vendor/autoload.php';
 
 define('APP', __DIR__.DIRECTORY_SEPARATOR);
 define("PUBLIC_ROOT", __DIR__.DIRECTORY_SEPARATOR);
@@ -9,10 +9,12 @@ define("PUBLIC_ROOT", __DIR__.DIRECTORY_SEPARATOR);
 
 $router = new bundle\Router();
 
-$router->add('', ['controller' => 'HomeController', 'action' => 'index']);
-$router->add(
-    'sessions',
-    ['controller' => 'SessionsController', 'action' => 'index']
+$router->add('',
+    ['controller' => 'HomeController', 'action' => 'index']
+);
+
+$router->add('tasks/add',
+    ['controller' => 'TaskController', 'action' => 'add']
 );
 
 $router->add(
@@ -33,31 +35,6 @@ $router->add(
 $router->add(
     'admin',
     ['controller' => 'AdminController', 'action' => 'index']
-);
-
-$router->add(
-    'films/add',
-    ['controller' => 'FilmsController', 'action' => 'add']
-);
-
-$router->add(
-    'films/{id:\d+}',
-    ['controller' => 'FilmsController', 'action' => 'display']
-);
-
-$router->add(
-    'films/{id:\d+}/edit',
-    ['controller' => 'FilmsController', 'action' => 'edit']
-);
-
-$router->add(
-    'films/{id:\d+}/remove',
-    ['controller' => 'FilmsController', 'action' => 'remove']
-);
-
-$router->add(
-    'order/add',
-    ['controller' => 'OrderController', 'action' => 'add']
 );
 
 $router->dispatch($_SERVER['QUERY_STRING']);

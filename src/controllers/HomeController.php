@@ -8,17 +8,25 @@ use bundle\View;
 use models\Films;
 use models\Order;
 use models\Session;
+use models\Task;
+use utils\Paginator;
 
 class HomeController extends Controller
 {
+    const ITEM_PER_PAGE = 3;
+
     public function index()
     {
-        $values = [
-            'popularFilms' => Films::getPopular(),
-            'films'        => Films::getList('cdate DESC'),
-            'sessions'     => Session::getList()
-        ];
+        $page = $this->request->getQuery('page') ?? 1;
 
-        View::render('main/index.php', $values);
+        $offset = ($page - 1) * static::ITEM_PER_PAGE;
+
+        $taskList = Task::getPaginateList($offset, static::ITEM_PER_PAGE);
+
+        View::render('main/index.php', [
+            'tasks'       => $taskList['items'],
+            'cntPage'     => $taskList['cntPage'],
+            'currentPage' => $page
+        ]);
     }
 }

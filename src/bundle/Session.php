@@ -47,9 +47,14 @@ class Session
         $_SESSION[$key] = $value;
     }
 
+    public static function setError($key, $value)
+    {
+        $_SESSION['errors'][$key] = $value;
+    }
+
     public static function get($key)
     {
-        return array_key_exists($key, $_SESSION)? $_SESSION[$key]: null;
+        return array_key_exists($key, $_SESSION)? $_SESSION[$key] : null;
     }
 
     public static function generateCsrfToken()

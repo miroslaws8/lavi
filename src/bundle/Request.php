@@ -26,6 +26,26 @@ class Request
         return $this;
     }
 
+    public function getQueries()
+    {
+        $queries = [];
+
+        foreach ($_GET as $key => $value) {
+            $queries[$key] = $this->getQuery($key);
+        }
+
+        return $queries;
+    }
+
+    public function getQuery(string $key)
+    {
+        if (!array_key_exists($key, $_GET)) {
+            return null;
+        }
+
+        return htmlspecialchars($_GET[$key]);
+    }
+
     private function mergeData(array $post, array $files)
     {
         foreach ($post as $key => $value) {
@@ -44,8 +64,12 @@ class Request
         return array_merge($files, $post, $data);
     }
 
-    public function data(string $key) : string
+    public function data(string $key = null)
     {
+        if (!$key) {
+            return $this->data;
+        }
+
         if (!array_key_exists($key, $this->data)) {
             return false;
         }

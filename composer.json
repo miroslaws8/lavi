@@ -1,0 +1,13 @@
+{
+    "name": "miro/miframe",
+    "authors": [
+        {
+            "name": "miroslaw",
+            "email": "vip93951247@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": { "": "src/" }
+    },
+    "require": {}
+}
