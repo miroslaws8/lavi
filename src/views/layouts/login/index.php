@@ -2,7 +2,7 @@
 bundle\View::render('layouts/default/header.php');
 ?>
 
-<?php if ($error) { ?>
+<?php if (!empty($error)) { ?>
     <div class="form-signin">
         <div class="alert alert-danger" role="alert">
             <?php echo $error; ?>
