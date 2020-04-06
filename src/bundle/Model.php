@@ -104,18 +104,63 @@ class Model
         return (int) $this->fetchAssociative()["count"];
     }
 
-    public function doGetAll(string $orderBy = null)
+    public function doGetAll(?array $where = null, string $orderBy = null)
     {
+        $search = null;
+
+        if ($where) {
+            $search = ' WHERE '.$this->getPreparedWhere($where);
+        }
+
         if ($orderBy) {
             $orderBy = 'ORDER BY '.$orderBy;
         }
 
         static::$statement = $this->connection
-            ->prepare('SELECT * FROM '.$this->table.' '.$orderBy);
+            ->prepare('SELECT * FROM '.$this->table.$search['keys'].' '.$orderBy);
 
-        $this->doExecute();
+
+        $this->doExecute($search['values']);
 
         return $this->fetchAllAssociative();
+    }
+
+    public function doGetOne(?array $where = null)
+    {
+        $search = null;
+
+        if ($where) {
+            $search = $this->getPreparedWhere($where);
+        }
+
+        static::$statement = $this->connection
+            ->prepare('SELECT * FROM '.$this->table.' WHERE '.$search['keys']);
+
+
+        $this->doExecute($search['values']);
+
+        return $this->fetchAssociative();
+    }
+
+    private function getPreparedWhere(array $values)
+    {
+        $keysMask = [];
+        $keys     = [];
+        foreach ($values as $key => $value) {
+            if (empty($value) || (is_array($value) && empty($value['tmp_name']))) {
+                continue;
+            }
+
+            $keysMask[] = $key.'=:'.$key;
+            $keys[$key] = trim($value);
+        }
+
+        $strKeysMask  = implode(' AND ', $keysMask);
+
+        return [
+            'values' => $keys,
+            'keys'   => $strKeysMask
+        ];
     }
 
     public function doInsert(array $values)

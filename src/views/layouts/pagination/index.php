@@ -8,7 +8,7 @@
                     </span>
                 </li>
             <?php } else { ?>
-                <li class="page-item"><a class="page-link" href="<?php echo $instance->getUrl($i); ?>"><?php echo $i; ?></a></li>
+                <li class="page-item"><a class="page-link" href="<?php echo $instance->getUrl($i); ?>&"><?php echo $i; ?></a></li>
             <?php } ?>
         <?php } ?>
     </ul>

@@ -70,7 +70,14 @@ class Router
             throw new \Exception("Method $action in controller $controller not found");
         }
 
-        $instance->$action();
+        try {
+            $instance->$action();
+        } catch (\Exception $exp) {
+            View::render('layouts/default/error.php', [
+                'message' => $exp->getMessage(),
+                'code'    => $exp->getCode()
+            ]);
+        }
     }
 
     protected function convertToStudlyCaps($string)

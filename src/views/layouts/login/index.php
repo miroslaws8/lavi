@@ -2,6 +2,14 @@
 bundle\View::render('layouts/default/header.php');
 ?>
 
+<?php if ($error) { ?>
+    <div class="form-signin">
+        <div class="alert alert-danger" role="alert">
+            <?php echo $error; ?>
+        </div>
+    </div>
+<?php } ?>
+
 <form class="form-signin" method="post" action="login/signin">
     <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
     <label for="login" class="sr-only">Login</label>

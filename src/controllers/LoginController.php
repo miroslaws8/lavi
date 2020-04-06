@@ -12,28 +12,43 @@ class LoginController extends Controller
 {
     public function index()
     {
+        $values = [];
+
+        $error = $this->validator->getError('login');
+
+        if ($error) {
+            $values['error'] = $error;
+        }
+
         if (Session::getUserID()) {
             Redirector::to('/admin');
         }
 
-        View::render('layouts/login/index.php');
+        View::render('layouts/login/index.php', $values);
     }
 
-    public function signin() : void
+    public function signin()
     {
         $login     = $this->request->data("login");
         $password  = $this->request->data("password");
 
         $user = User::get($login, md5($password));
 
-        if ($user) {
-            Session::set('is_logged_in', true);
-            Session::set('user_id', $user['id']);
+        if (empty($user)) {
+            $this->validator
+                ->addError('login', 'Введенные данные не верны!');
 
-            Redirector::to('admin');
+            Redirector::to('/login');
+
+            return true;
         }
 
-        Redirector::to('/');
+        Session::set('is_logged_in', true);
+        Session::set('user_id', $user['id']);
+
+        Redirector::to('/admin');
+
+        return true;
     }
 
     public function logout() : void

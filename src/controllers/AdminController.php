@@ -5,12 +5,12 @@ namespace controllers;
 use bundle\{Controller, Session, View};
 use bundle\Redirector;
 use models\Films;
+use models\Task;
 
 class AdminController extends Controller
 {
     public function before()
     {
-
         if (!Session::getUserID()) {
             Redirector::to('login/');
             return false;
@@ -19,10 +19,10 @@ class AdminController extends Controller
         return true;
     }
 
-    public function indexAction()
+    public function doIndex()
     {
         $params = [
-            'films' => Films::getList()
+            'tasks' => Task::getList()
         ];
 
         View::render('admin/index.php', $params);

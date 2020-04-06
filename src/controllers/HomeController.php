@@ -17,16 +17,31 @@ class HomeController extends Controller
 
     public function index()
     {
-        $page = $this->request->getQuery('page') ?? 1;
-
+        $page   = (int) $this->request->getQuery('page') ?? 1;
+        $page   = max($page, 1);
         $offset = ($page - 1) * static::ITEM_PER_PAGE;
 
-        $taskList = Task::getPaginateList($offset, static::ITEM_PER_PAGE);
+        $orderBy  = $this->getSort();
+        $taskList = Task::getPaginateList(
+            $offset, static::ITEM_PER_PAGE, $orderBy
+        );
 
         View::render('main/index.php', [
             'tasks'       => $taskList['items'],
             'cntPage'     => $taskList['cntPage'],
             'currentPage' => $page
         ]);
+    }
+
+    private function getSort()
+    {
+        $sort   = $this->request->getQuery('sorting');
+        $sortBy = $this->request->getQuery('field');
+
+        if (empty($sort) || empty($sortBy)) {
+            return null;
+        }
+
+        return $sortBy.' '.strtoupper($sort);
     }
 }

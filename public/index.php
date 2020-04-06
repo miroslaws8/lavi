@@ -17,6 +17,10 @@ $router->add('tasks/add',
     ['controller' => 'TaskController', 'action' => 'add']
 );
 
+$router->add('tasks/{id:\d+}/edit',
+    ['controller' => 'TaskController', 'action' => 'edit']
+);
+
 $router->add(
     'login',
     ['controller' => 'LoginController', 'action' => 'index']
