@@ -1,5 +1,5 @@
 <?php
-bundle\View::render('layouts/default/header.php');
+bundle\View::render('layouts/default/head.php');
 ?>
 
 <?php if (!empty($error)) { ?>

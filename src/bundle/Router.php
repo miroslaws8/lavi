@@ -48,29 +48,29 @@ class Router
     public function dispatch($url)
     {
         $url = $this->removeQueryStringVariables($url);
-
-        if (!$this->match($url)) {
-            throw new \Exception('No route matched.', 404);
-        }
-
-        $controller = $this->params['controller'];
-        $controller = $this->convertToStudlyCaps($controller);
-        $controller = $this->getNamespace() . $controller;
-
-        if (!class_exists($controller)) {
-            throw new \Exception("Controller class $controller not found");
-        }
-
-        $instance = $this->factoryController($controller);
-
-        $action = $this->params['action'];
-        $action = $this->convertToCamelCase($action);
-
-        if (!preg_match('/action$/i', $action) == 0) {
-            throw new \Exception("Method $action in controller $controller not found");
-        }
-
         try {
+            if (!$this->match($url)) {
+                throw new \Exception('No route matched.', 404);
+            }
+
+            $controller = $this->params['controller'];
+            $controller = $this->convertToStudlyCaps($controller);
+            $controller = $this->getNamespace() . $controller;
+
+            if (!class_exists($controller)) {
+                throw new \Exception("Controller class $controller not found");
+            }
+
+            $instance = $this->factoryController($controller);
+
+            $action = $this->params['action'];
+            $action = $this->convertToCamelCase($action);
+
+            if (!preg_match('/action$/i', $action) == 0) {
+                throw new \Exception("Method $action in controller $controller not found");
+            }
+
+
             $instance->$action();
         } catch (\Exception $exp) {
             View::render('layouts/default/error.php', [

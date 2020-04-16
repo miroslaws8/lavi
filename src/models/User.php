@@ -3,6 +3,7 @@
 namespace models;
 
 use bundle\Model;
+use bundle\Session;
 
 class User extends Model
 {

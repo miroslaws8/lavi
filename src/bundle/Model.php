@@ -72,7 +72,7 @@ class Model
         static::$statement = $this->connection->prepare($query);
     }
 
-    public function doPagination(int $offset, int $limit, ?array $where = null, $orderBy = null)
+    public function doPagination(int $offset, int $limit, ?array $where = null, ?string $orderBy = null)
     {
         if ($orderBy) {
             $orderBy = 'ORDER BY '.$orderBy;
@@ -104,7 +104,7 @@ class Model
         return (int) $this->fetchAssociative()["count"];
     }
 
-    public function doGetAll(?array $where = null, string $orderBy = null)
+    public function doGetAll(?array $where = null, ?string $orderBy = null)
     {
         $search = null;
 
@@ -168,7 +168,7 @@ class Model
         $maskValues = $this->getPreparedMaskValues($values);
 
         $sql = sprintf(
-            'INSERT INTO %s (%s) VALUES (%s)',
+            'INSERT INTO %tests (%tests) VALUES (%tests)',
             $this->table,
             $maskValues['keys'],
             $maskValues['values']
@@ -185,7 +185,7 @@ class Model
         $maskValues = $this->getPreparedUpdateValues($values);
 
         $sql = sprintf(
-            'UPDATE %s SET %s WHERE id = %s',
+            'UPDATE %tests SET %tests WHERE id = %tests',
             $this->table,
             $maskValues['keys'],
             $id

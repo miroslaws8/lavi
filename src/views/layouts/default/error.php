@@ -1,16 +1,18 @@
 <?php
-bundle\View::render('layouts/default/header.php');
+bundle\View::render('layouts/default/head.php');
 ?>
-<div class="mid">
-    <div class="jumbotron">
-        <h1 class="display-4">Error</h1>
-        <hr class="my-4">
-        <p>Message: <?php echo $message; ?></p>
-        <?php if ($code) { ?>
-        <p>Code: <?php echo $code; ?></p>
-        <?php } ?>
-        <p class="lead">
-            <a class="btn btn-primary btn-lg" href="/" role="button">На главную</a>
-        </p>
+<div class="position-center" style="width: fit-content;height: fit-content;">
+    <h1 style="color: #fff;">Error</h1>
+    <div>
+        <span style="color:#fff;">
+            Message: <?php echo $message; ?>
+        </span>
+        <span style="color:#fff;">
+            <?php if ($code) { ?>
+                <p>Code: <?php echo $code; ?></p>
+            <?php } ?>
+        </span>
     </div>
+    <a href="/" style="margin-top: 20px"
+       class="btn btn-info">Home</a>
 </div>

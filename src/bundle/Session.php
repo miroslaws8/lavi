@@ -26,6 +26,11 @@ class Session
         return true;
     }
 
+    public static function doLogin()
+    {
+        $_SESSION['is_logged_in'] = true;
+    }
+
     public static function getIsLoggedIn()
     {
         return empty($_SESSION["is_logged_in"])

@@ -7,13 +7,15 @@ use bundle\Config;
 class Uploader
 {
     private static $allowedMIME = [
-        "image" => array('image/jpeg', 'image/png', 'image/gif'),
-        "csv"   => array('text/csv', 'application/vnd.ms-excel', 'text/plain'),
-        "file"  => array('application/msword',
+        "image" => ['image/jpeg', 'image/png', 'image/gif'],
+        "csv"   => ['text/csv', 'application/vnd.ms-excel', 'text/plain'],
+        "file"  => [
+            'application/msword',
             'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
             'application/pdf',
             'application/zip',
-            'application/vnd.ms-powerpoint')
+            'application/vnd.ms-powerpoint'
+        ]
     ];
 
     private static $fileSize = [100, 5242880];

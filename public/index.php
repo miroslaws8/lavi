@@ -13,32 +13,12 @@ $router->add('',
     ['controller' => 'HomeController', 'action' => 'index']
 );
 
-$router->add('tasks/add',
-    ['controller' => 'TaskController', 'action' => 'add']
+$router->add('signup',
+    ['controller' => 'SignupController', 'action' => 'index']
 );
 
-$router->add('tasks/{id:\d+}/edit',
-    ['controller' => 'TaskController', 'action' => 'edit']
-);
-
-$router->add(
-    'login',
-    ['controller' => 'LoginController', 'action' => 'index']
-);
-
-$router->add(
-    'logout',
-    ['controller' => 'LoginController', 'action' => 'logout']
-);
-
-$router->add(
-    'login/signin',
-    ['controller' => 'LoginController', 'action' => 'signin']
-);
-
-$router->add(
-    'admin',
-    ['controller' => 'AdminController', 'action' => 'index']
+$router->add('signup/action',
+    ['controller' => 'SignupController', 'action' => 'signup']
 );
 
 $router->dispatch($_SERVER['QUERY_STRING']);
