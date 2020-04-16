@@ -8,7 +8,7 @@
             Framework for small tasks.
         </span>
     </div>
-    <a target="_blank" href="https://gitlab.com/vip93951247/frcin" style="margin-top: 20px"
+    <a target="_blank" href="https://gitlab.com/vip93951247/task-manager" style="margin-top: 20px"
             class="btn btn-info">Read documentation</a>
 </div>
 
