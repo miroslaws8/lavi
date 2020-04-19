@@ -13,6 +13,10 @@ $router->add('',
     ['controller' => 'HomeController', 'action' => 'index']
 );
 
+$router->add('logout',
+    ['controller' => 'UserController', 'action' => 'logout']
+);
+
 $router->add('signup',
     ['controller' => 'UserController', 'action' => 'index']
 );

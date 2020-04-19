@@ -20,6 +20,20 @@ class UserController extends Controller
         return true;
     }
 
+    public function logout() : bool
+    {
+        if (!Session::getIsLoggedIn()) {
+            Redirector::root();
+            return false;
+        }
+
+        Session::logout();
+
+        Redirector::to('/');
+
+        return true;
+    }
+
     public function doIndex() : void
     {
         View::render('login/signup.php');

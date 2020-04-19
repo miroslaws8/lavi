@@ -91,7 +91,7 @@ class Session
 
     public static function logout()
     {
+        unset($_SESSION['user']);
         unset($_SESSION['is_logged_in']);
-        unset($_SESSION['user_id']);
     }
 }
