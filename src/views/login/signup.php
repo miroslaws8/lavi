@@ -15,9 +15,9 @@ bundle\View::render('layouts/default/header.php');
     <hr>
     <form method="post" action="/signup/action">
         <div class="form-group">
-            <label for="name">Ваше имя</label>
-            <input name="name" type="text" class="form-control" id="name" placeholder="Имя">
-            <small class="form-text text-muted">Введите свое имя!</small>
+            <label for="name">Ваш логин</label>
+            <input name="name" type="text" class="form-control" id="name" placeholder="Логин">
+            <small class="form-text text-muted">Введите свой логин</small>
         </div>
         <div class="form-group">
             <label for="password">Пароль</label>

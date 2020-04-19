@@ -9,7 +9,7 @@
                 Тест для испытания стресоустойчивости ваших сотрудников.
             </span>
         </div>
-        <a target="_blank" href="/signup" style="margin-top: 20px"
+        <a href="/signup" style="margin-top: 20px"
            class="btn btn-info">Регистрация</a>
         <div style="margin-top: 10px">
             <a href="/signin" class="sublink"><small>Я уже зарегестрирован</small></a>
