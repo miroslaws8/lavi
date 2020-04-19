@@ -61,7 +61,15 @@ class Session
 
     public static function get($key)
     {
-        return array_key_exists($key, $_SESSION)? $_SESSION[$key] : null;
+        $isExist = array_key_exists($key, $_SESSION);
+
+        if ($isExist && is_array($_SESSION[$key])) {
+            $param = (object) $_SESSION[$key];
+
+            return $param;
+        }
+
+        return $isExist? $_SESSION[$key] : null;
     }
 
     public static function generateCsrfToken()

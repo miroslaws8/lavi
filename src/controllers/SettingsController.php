@@ -17,15 +17,26 @@ class SettingsController extends Controller
 
     public function doIndex()
     {
-        return View::render('settings/index.php');
+        $idUser = Session::get('user')->id;
+        $user   = User::getOne(['id' => $idUser]);
+
+        $settings = json_decode($user['settings'], true);
+
+        if ($settings === null) {
+            $settings = [];
+        }
+
+        View::render('settings/index.php', [
+            'settings' => $settings
+        ]);
     }
 
     public function doAddSettings()
     {
         $request = $this->request->data();
-        $user    = Session::get('user');
+        $idUser    = Session::get('user')->id;
 
-        User::update(['settings' => json_encode($request)], $user['id']);
+        User::update(['settings' => json_encode($request)], $idUser);
 
         Redirector::to('/game');
         return true;

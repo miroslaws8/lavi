@@ -7,7 +7,21 @@ const App = {
         let scene = jQuery('.scene');
         let cube  = jQuery('.scene .cube');
 
-        jQuery('#scene-settings input').change(function (el) {
+        jQuery(document).ready(function () {
+            jQuery('#scene-settings input').each(function (index, item) {
+                let val = jQuery(item).val();
+                let css = jQuery(item).prop('id');
+
+                if (jQuery(item).data('ident') === 'scene') {
+                    scene.css(css, val);
+                    return true;
+                }
+
+                cube.css(css, val);
+            });
+        });
+
+        jQuery('#scene-settings input').bind('change keyup', function (el) {
              let val = jQuery(el.target).val();
              let css = jQuery(el.target).prop('id');
 
@@ -29,26 +43,17 @@ const App = {
             let w =  jQuery('.game-scene>.cube').width();
             let h =  jQuery('.game-scene>.cube').height();
 
-            console.log(w);
             let x = ev.clientX - parentOffset.left - w/2;
-            let y = ev.clientY - parentOffset.top - h/2;
+            let y = ev.clientY - parentOffset.top - h - 30;
 
             jQuery('.game-scene>.cube').css('top', y);
             jQuery('.game-scene>.cube').css('left', x);
         });
     },
 
-    start: async function () {
-        let tick  = 1;
-        let timer = setInterval(function () {
-            jQuery('.start-game').html('<h3>' + tick + '</h3>');
-            tick++;
-            if (tick > 3) {
-                jQuery('.start-game').remove();
-                jQuery('.game-scene').show();
-                clearInterval(timer);
-            }
-        }, 1000);
+    start: async function (el) {
+        jQuery(el).prop('disabled', true);
+        jQuery('#stop').prop('disabled', false);
 
         let settingScene = this.getSceneSettings();
 
@@ -78,17 +83,35 @@ const App = {
 
     doDisplayQuestion: function () {
         setInterval(() => {
-            let question = this.getRandomInt(0, 10) + '+' + this.getRandomInt(0, 10);
-            jQuery('.question').css('top', '20');
-            jQuery('.question').css('left', '20');
+            let question  = this.getQuestion();
+            let answer = parseInt(this.getAnswer(question));
             jQuery('.question').html('<h3>' + question + '</h3>');
+            jQuery('.answer').html('<h3>' + answer + '</h3>');
         }, 3000);
     },
 
+    getAnswer: function (question) {
+        let symbol = {
+            '9': '-',
+            '10': '+'
+        };
+
+        return parseInt(question) + symbol[this.getRandomInt(9, 11)] + parseInt(this.getRandomInt(0, 20));
+    },
+
+    getQuestion: function () {
+        let symbol = {
+            '9': '-',
+            '10': '+'
+        };
+
+        return this.getRandomInt(0, 10) + symbol[this.getRandomInt(9, 11)] + this.getRandomInt(0, 10);
+    },
+
     getRandomInt: function (min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min;
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min)) + min;
     },
 
     getSettingsCube: function () {

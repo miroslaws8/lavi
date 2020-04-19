@@ -1,17 +1,20 @@
 <?php
 bundle\View::render('layouts/default/header.php');
-bundle\View::render('layouts/header.php');
 ?>
-    <div class="mid">
-        <div class="start-game">
-            <small>Нажав кнопку, вы наччнете игру, которая вас может убить!</small>
-            <button type="button" id="start" onclick="App.start()" class="btn btn-success">Начать игру</button>
-        </div>
-        <div class="game-scene">
+<div class="settings">
+    <div style="margin: 10px 0;">
+        <button id="start" onclick="App.start(this)" type="button" class="btn btn-primary">Старт</button>
+        <button id="stop" disabled type="button" class="btn btn-danger">Стоп</button>
+        <button type="button" class="btn btn-dark">Выход</button>
+    </div>
+    <div class="game-scene">
+        <div class="answer"></div>
+        <div class="cube">
             <div class="question"></div>
-            <div class="cube"></div>
         </div>
     </div>
+</div>
+
 <?php
 bundle\View::render('layouts/default/footer.php');
 ?>

@@ -157,7 +157,6 @@ body, html {
     font-weight: bold;
     font-size: 25px;
     padding-bottom: 20px;
-    color: #fff;
 }
 
 .start-game {
@@ -178,17 +177,18 @@ body, html {
     color: #777;
     position: relative;
     overflow: hidden;
-    display: none;
+    display: block;
 }
 
 .game-scene>.cube {
     position: absolute;
     left: 20px;
     top: 20px;
+    position: relative;
 }
 
 .question {
     position: absolute;
-    left: 20px;
-    top: 20px;
+    left: 0;
+    top: -50px;
 }

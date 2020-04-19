@@ -15,7 +15,7 @@
             <a href="/signin" class="sublink"><small>Я уже зарегестрирован</small></a>
         </div>
     <?php else: ?>
-        <h1 style="color: #fff;">Приветствуем, <?= $user['name'] ?>!</h1>
+        <h1 style="color: #fff;">Приветствуем, <?= $user->name ?>!</h1>
         <div style="width: 300px">
             <small style="color:#fff;">
                 Теперь вы можете начать настройку.

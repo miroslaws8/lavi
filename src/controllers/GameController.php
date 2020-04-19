@@ -9,6 +9,6 @@ class GameController extends Controller
 {
     public function index() : void
     {
-        View::render('game/signup.php');
+        View::render('game/index.php');
     }
 }
