@@ -18,7 +18,7 @@ bundle\View::render('layouts/default/header.php');
             <div class="form-group">
                 <label for="name">Ваш логин</label>
                 <input name="name" type="text" class="form-control" id="name" placeholder="Логин">
-                <small class="form-text text-muted">Введите свойgit логин</small>
+                <small class="form-text text-muted">Введите свой логин</small>
             </div>
             <div class="form-group">
                 <label for="password">Пароль</label>
