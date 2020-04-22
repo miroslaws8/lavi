@@ -3,6 +3,14 @@ body, html {
     background: #1a1e2d;
 }
 
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #ffffff;
+}
+
 /* Main */
 
 .form-group label {
@@ -131,7 +139,15 @@ body, html {
 .scene-settings {
     position: fixed;
     width: 200px;
-    overflow: auto;
+    height: 100%;
+    overflow: hidden;
+}
+
+.scene-settings form {
+    height: fit-content;
+    overflow: scroll;
+    display: block;
+    padding: 0 10px;
 }
 
 .cube {
@@ -191,4 +207,21 @@ body, html {
     position: absolute;
     left: 0;
     top: -50px;
+}
+
+.game-time {
+    display: flex;
+    float: right;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 10px;
+}
+
+.speed-value {
+    color: #fff;
+}
+
+.form-control:focus, .form-control:active {
+    outline: none !important;
+    box-shadow: none;
 }

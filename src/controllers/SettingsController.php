@@ -34,7 +34,7 @@ class SettingsController extends Controller
     public function doAddSettings()
     {
         $request = $this->request->data();
-        $idUser    = Session::get('user')->id;
+        $idUser  = Session::get('user')->id;
 
         User::update(['settings' => json_encode($request)], $idUser);
 

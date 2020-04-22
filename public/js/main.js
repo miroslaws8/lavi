@@ -36,24 +36,13 @@ const App = {
 
              localStorage.setItem(css, val);
         });
-
-        jQuery('.game-scene').mousemove(function (ev) {
-            let parentOffset = jQuery('.game-scene').parent().offset();
-
-            let w =  jQuery('.game-scene>.cube').width();
-            let h =  jQuery('.game-scene>.cube').height();
-
-            let x = ev.clientX - parentOffset.left - w/2;
-            let y = ev.clientY - parentOffset.top - h - 30;
-
-            jQuery('.game-scene>.cube').css('top', y);
-            jQuery('.game-scene>.cube').css('left', x);
-        });
     },
 
     start: async function (el) {
+        this.moving();
         jQuery(el).prop('disabled', true);
         jQuery('#stop').prop('disabled', false);
+
 
         let settingScene = this.getSceneSettings();
 
@@ -78,7 +67,56 @@ const App = {
             jQuery('.game-scene .cube').css(key, setting);
         }
 
-        this.doDisplayQuestion();
+        //this.doDisplayQuestion();
+    },
+
+    moving: function () {
+        let start = Date.now();
+        let time  = localStorage.getItem('time');
+        time = parseInt(time.replace(':', '')) * 1000;
+
+        let radius = jQuery('.game-scene').height() / 2 - 50;
+        let width  = jQuery('.game-scene').width() / 2 - 50;
+
+        let speed = localStorage.getItem('speed');
+
+        let $ = {
+            radius: radius,
+            speed: 20
+        };
+
+        let circle = this.getRandomInt(180, 360);
+
+        let f = 0;
+        let s = speed * Math.PI / circle;
+
+        let timer = setInterval(function() {
+            let timePassed = Date.now() - start;
+            let timeOut = Math.ceil((time - timePassed) / 1000);
+
+            if (timeOut < 60) {
+                timeOut = '00.' + timeOut;
+            }
+
+            if (timeOut > 60) {
+                timeOut = (timeOut / 60).toFixed(2);
+            }
+
+            timeOut = timeOut.replace('.', ':');
+
+            jQuery('#game-time').html(timeOut);
+
+            f += s;
+
+            if (timePassed >= time) {
+                clearInterval(timer);
+                return;
+            }
+
+            jQuery('.game-scene>.cube').css('left', width + width * Math.sin(f) + 'px');
+            jQuery('.game-scene>.cube').css('top', radius + $.radius * Math.cos(f) + 'px');
+
+        }, $.speed)
     },
 
     doDisplayQuestion: function () {
