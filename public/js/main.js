@@ -2,7 +2,7 @@ const App = {
     mover: null,
     cancel: false,
     stopped: false,
-    time: parseInt(localStorage.getItem('time').replace(':', '')) * 1000,
+    time: null,
     timer: null,
     headers: {
         'Content-Type': 'application/json'
@@ -66,6 +66,10 @@ const App = {
     },
 
     start: async function (el) {
+        if (this.cancel === false) {
+            this.time = parseInt(localStorage.getItem('time').replace(':', '')) * 1000;
+        }
+
         this.setMover();
         this.mover.start();
         this.startTimer();
