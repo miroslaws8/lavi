@@ -24,4 +24,9 @@ class GameController extends Controller
             'configs' =>$config
         ]);
     }
+
+    public function endgame() : void
+    {
+        View::render('game/endgame.php');
+    }
 }

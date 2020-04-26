@@ -5,24 +5,6 @@ bundle\View::render('layouts/default/header.php');
     <div class="list scene-settings" id="scene-settings">
         <form method="post" action="/settings/action">
             <div class="form-group">
-                <label for="speed">Скорость:</label>
-                <input min="0.1" max="2" step="0.1" name="speed" value="<?= $settings['speed'] ?? '' ?>" type="range" class="form-control" id="speed">
-                <small class="speed-value"></small>
-                <script>
-                    jQuery('#speed').change(function () {
-                        let speed = jQuery('#speed').val();
-                        let html  = speed + ' - средняя скорость куба.'
-                        if (speed > 1) {
-                            html = speed + ' - большая скорость куба.';
-                        } else if (speed < 1) {
-                            html = speed + ' - маленькая скорость куба.';
-                        }
-
-                        jQuery('.speed-value').html(html);
-                    });
-                </script>
-            </div>
-            <div class="form-group">
                 <label for="time">Время теста:</label>
                 <input name="time" value="<?= $settings['time'] ?? '' ?>" type="time" class="form-control" id="time">
             </div>

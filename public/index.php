@@ -44,8 +44,14 @@ $router->add('settings/action',
     ['controller' => 'SettingsController', 'action' => 'addSettings']
 );
 
+/* Game */
+
 $router->add('game',
     ['controller' => 'GameController', 'action' => 'index']
+);
+
+$router->add('endgame',
+    ['controller' => 'GameController', 'action' => 'endgame']
 );
 
 

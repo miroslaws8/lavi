@@ -1,9 +1,15 @@
 const App = {
+    mover: null,
+    cancel: false,
+    stopped: false,
+    time: parseInt(localStorage.getItem('time').replace(':', '')) * 1000,
+    timer: null,
     headers: {
         'Content-Type': 'application/json'
     },
 
     observer: function () {
+        this.observeKeydown();
         let scene = jQuery('.scene');
         let cube  = jQuery('.scene .cube');
 
@@ -38,11 +44,34 @@ const App = {
         });
     },
 
+    observeKeydown() {
+        jQuery(document).keydown((event) => {
+            if (event.code === 'Space') {
+                if (this.stopped === false) {
+                    this.stop();
+                    this.stopped = true;
+                    return true;
+                }
+
+                this.start(document.getElementById('start'));
+                this.stopped = false;
+                return true;
+            }
+
+            if (event.code === 'Escape') {
+                window.location = '/settings'
+                return true;
+            }
+        });
+    },
+
     start: async function (el) {
-        this.moving();
+        this.setMover();
+        this.mover.start();
+        this.startTimer();
+
         jQuery(el).prop('disabled', true);
         jQuery('#stop').prop('disabled', false);
-
 
         let settingScene = this.getSceneSettings();
 
@@ -67,65 +96,70 @@ const App = {
             jQuery('.game-scene .cube').css(key, setting);
         }
 
-        //this.doDisplayQuestion();
+        this.doDisplayQuestion();
     },
 
-    moving: function () {
-        let start = Date.now();
-        let time  = localStorage.getItem('time');
-        time = parseInt(time.replace(':', '')) * 1000;
+    startTimer: function() {
+        this.timer = setInterval(() => {
+            this.doDisplayQuestion();
+            this.time = this.time - 1000;
 
-        let radius = jQuery('.game-scene').height() / 2 - 50;
-        let width  = jQuery('.game-scene').width() / 2 - 50;
+            let htmlTime = this.time / 1000;
 
-        let speed = localStorage.getItem('speed');
+            document.getElementById('game-time').innerHTML = this.getHtmlTime(htmlTime);
 
-        let $ = {
-            radius: radius,
-            speed: 20
-        };
-
-        let circle = this.getRandomInt(180, 360);
-
-        let f = 0;
-        let s = speed * Math.PI / circle;
-
-        let timer = setInterval(function() {
-            let timePassed = Date.now() - start;
-            let timeOut = Math.ceil((time - timePassed) / 1000);
-
-            if (timeOut < 60) {
-                timeOut = '00.' + timeOut;
+            if (this.time <= 0) {
+                this.cancel = true;
+                this.stop();
+                return true;
             }
+        }, 1000);
+    },
 
-            if (timeOut > 60) {
-                timeOut = (timeOut / 60).toFixed(2);
-            }
+    getHtmlTime: function(time) {
+        return time.toString().padStart(4, "0").replace(/(\d{1,2}(?=(?:\d\d)+(?!\d)))/g, "$1" + ':');
+    },
 
-            timeOut = timeOut.replace('.', ':');
+    stopTimer: function() {
+        if (this.timer === null) {
+            return;
+        }
 
-            jQuery('#game-time').html(timeOut);
+        clearInterval(this.timer);
+    },
 
-            f += s;
+    stop: function (el) {
+        this.mover.stop();
+        this.stopTimer();
 
-            if (timePassed >= time) {
-                clearInterval(timer);
-                return;
-            }
+        if (this.cancel === true) {
+            this.time = parseInt(localStorage.getItem('time').replace(':', '')) * 1000;
+            this.timer = null;
 
-            jQuery('.game-scene>.cube').css('left', width + width * Math.sin(f) + 'px');
-            jQuery('.game-scene>.cube').css('top', radius + $.radius * Math.cos(f) + 'px');
+            window.location = '/endgame'
+        }
 
-        }, $.speed)
+        jQuery(el).prop('disabled', true);
+        jQuery('#start').prop('disabled', false);
+    },
+
+    setMover: function() {
+        if (this.mover !== null) {
+            return this.mover;
+        }
+
+        this.mover = new Mover(
+            document.getElementById('cube'), document.getElementById('game-scene')
+        );
+
+        return this.mover;
     },
 
     doDisplayQuestion: function () {
-        setInterval(() => {
-            let question  = this.getQuestion();
-            let answer = parseInt(this.getAnswer(question));
-            jQuery('.question').html('<h3>' + question + '</h3>');
-            jQuery('.answer').html('<h3>' + answer + '</h3>');
-        }, 3000);
+        let question  = this.getQuestion();
+        let answer = parseInt(this.getAnswer(question));
+        jQuery('.question').html('<h3>' + question + '</h3>');
+        jQuery('.answer').html('<h3>' + answer + '</h3>');
     },
 
     getAnswer: function (question) {
@@ -134,7 +168,7 @@ const App = {
             '10': '+'
         };
 
-        return parseInt(question) + symbol[this.getRandomInt(9, 11)] + parseInt(this.getRandomInt(0, 20));
+        return parseInt(question) + parseInt(this.getRandomInt(-20, 20));
     },
 
     getQuestion: function () {
@@ -210,4 +244,98 @@ const App = {
 
         return await response.json();
     },
+}
+
+class Mover {
+    constructor(obj, container) {
+        this.$object = obj;
+        this.$container = container;
+        this.container_is_window = container === window;
+        this.pixels_per_second = 250;
+        this.current_position = { x: 0, y: 0 };
+        this.is_running = false;
+    }
+
+    _getContainerDimensions() {
+        if (this.$container === window) {
+            return {
+                'height' : this.$container.innerHeight,
+                'width' : this.$container.innerWidth
+            };
+        } else {
+            return {
+                'height' : this.$container.clientHeight - this.$object.clientHeight,
+                'width' : this.$container.clientWidth - this.$object.clientWidth
+            };
+        }
+    }
+
+    _generateNewPosition() {
+        // Get container dimensions minus div size
+        let containerSize = this._getContainerDimensions();
+        let availableHeight = containerSize.height - this.$object.clientHeight;
+        let availableWidth = containerSize.width - this.$object.clientHeight;
+
+        // Pick a random place in the space
+        let y = Math.floor(Math.random() * availableHeight);
+        let x = Math.floor(Math.random() * availableWidth);
+
+        return { x: x, y: y };
+    }
+
+    _calcDelta(a, b) {
+        let dx   = a.x - b.x;
+        let dy   = a.y - b.y;
+        let dist = Math.sqrt( dx*dx + dy*dy );
+
+        return dist;
+    }
+
+    _moveOnce() {
+        // Pick a new spot on the page
+        let next = this._generateNewPosition();
+
+        // How far do we have to move?
+        let delta = this._calcDelta(this.current_position, next);
+
+        // Speed of this transition, rounded to 2DP
+        let speed = Math.round((delta / this.pixels_per_second) * 100) / 100;
+
+        this.$object.style.transition='transform '+speed+'s linear';
+        this.$object.style.transform='translate3d('+next.x+'px, '+next.y+'px, 0)';
+
+        // Save this new position ready for the next call.
+        this.current_position = next;
+
+    };
+
+    start() {
+        if (this.is_running) {
+            return;
+        }
+
+        // Make sure our object has the right css set
+        this.$object.willChange = 'transform';
+        this.$object.pointerEvents = 'auto';
+
+        this.boundEvent = this._moveOnce.bind(this)
+
+        // Bind callback to keep things moving
+        this.$object.addEventListener('transitionend', this.boundEvent);
+
+        // Start it moving
+        this._moveOnce();
+
+        this.is_running = true;
+    }
+
+    stop() {
+        if (!this.is_running) {
+            return;
+        }
+
+        this.$object.removeEventListener('transitionend', this.boundEvent);
+
+        this.is_running = false;
+    }
 }
