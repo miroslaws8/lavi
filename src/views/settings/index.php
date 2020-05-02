@@ -29,6 +29,10 @@ bundle\View::render('layouts/default/header.php');
                 <input name="background-color" value="<?= $settings['background-color'] ?? '' ?>" type="color" class="form-control" data-ident="scene" id="background-color">
             </div>
             <div class="form-group">
+                <label for="background-color">Цвет фона при ошибке:</label>
+                <input name="background-color-error" value="<?= $settings['background-color-error'] ?? '' ?>" type="color" class="form-control" data-ident="scene" id="background-color-error">
+            </div>
+            <div class="form-group">
                 <label for="color">Цвет текста:</label>
                 <input name="color" type="color" value="<?= $settings['color'] ?? '' ?>" class="form-control" data-ident="scene" id="color">
             </div>

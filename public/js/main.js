@@ -4,6 +4,8 @@ const App = {
     stopped: false,
     time: null,
     timer: null,
+    cursorOut: 0,
+    success: 0,
     headers: {
         'Content-Type': 'application/json'
     },
@@ -73,12 +75,13 @@ const App = {
         this.setMover();
         this.mover.start();
         this.startTimer();
+        this.observerCube();
 
         jQuery(el).prop('disabled', true);
         jQuery('#stop').prop('disabled', false);
 
         let settingScene = this.getSceneSettings();
-
+        console.log(settingScene);
         for (let key in settingScene) {
             if (!settingScene.hasOwnProperty(key)) {
                 continue;
@@ -160,28 +163,35 @@ const App = {
     },
 
     doDisplayQuestion: function () {
-        let question  = this.getQuestion();
-        let answer = parseInt(this.getAnswer(question));
+        let question = this.setQuestion();
+        let answer   = this.setAnswer();
+
         jQuery('.question').html('<h3>' + question + '</h3>');
         jQuery('.answer').html('<h3>' + answer + '</h3>');
     },
 
-    getAnswer: function (question) {
-        let symbol = {
-            '9': '-',
-            '10': '+'
-        };
+    setAnswer: function () {
+        let x = this.getRandomInt(0, 10);
+        let y = this.getRandomInt(-10, 20);
 
-        return parseInt(question) + parseInt(this.getRandomInt(-20, 20));
+        this.answer = parseInt(x) + parseInt(y);
+
+        return this.answer;
     },
 
-    getQuestion: function () {
+    setQuestion: function () {
         let symbol = {
-            '9': '-',
-            '10': '+'
+            '1': '+',
+            '2': '-'
         };
 
-        return this.getRandomInt(0, 10) + symbol[this.getRandomInt(9, 11)] + this.getRandomInt(0, 10);
+        let x = this.getRandomInt(0, 10);
+        let y = this.getRandomInt(0, 10);
+
+        this.questHtml = parseInt(x) + symbol[this.getRandomInt(1, 3)] + parseInt(y);
+        this.quest = eval(this.questHtml);
+
+        return this.questHtml
     },
 
     getRandomInt: function (min, max) {
@@ -204,10 +214,62 @@ const App = {
     getSceneSettings: function () {
         let settings = {
             'background': localStorage.getItem('background-color'),
-            'color': localStorage.getItem('color')
+            'color': localStorage.getItem('color'),
         };
 
         return settings;
+    },
+
+    observerCube: function () {
+        const handler = (event) => {
+            if (event.type === 'mouseover') {
+                event.target.style.background = 'pink';
+                document.getElementById('game-scene').style.background = localStorage.getItem('background-color');
+            }
+            if (event.type === 'mouseout') {
+                this.cursorOut++;
+                document.getElementById('cursorError').innerHTML = this.cursorOut;
+                event.target.style.background = '';
+                document.getElementById('game-scene').style.background = localStorage.getItem('background-color-error');
+            }
+        };
+
+        let cube = document.getElementById('cube');
+        cube.onmouseover = cube.onmouseout = handler;
+
+        const handlerClick = (event) => {
+            let res = this.spaceship(this.answer, this.quest);
+
+            if (event.which === 1 && res === 1) {
+                this.success++;
+                console.log(this.success);
+            }
+
+            if (event.which === 2 && res === 0) {
+                this.success++;
+            }
+
+            if (event.which === 3 && res === -1) {
+                this.success++;
+            }
+
+            document.getElementById('success').innerHTML = this.success;
+        };
+
+        document.oncontextmenu = () => false;
+        document.getElementById('game-scene').onmousedown = handlerClick;
+    },
+
+    spaceship: function(a, b) {
+        if (a > b) {
+            return 1;
+        }
+
+        if (a === b) {
+            return 0;
+        }
+
+        return -1;
     },
 
     addTask: function () {
@@ -303,7 +365,7 @@ class Mover {
         let delta = this._calcDelta(this.current_position, next);
 
         // Speed of this transition, rounded to 2DP
-        let speed = Math.round((delta / this.pixels_per_second) * 100) / 100;
+        let speed = Math.round((delta / this.pixels_per_second) * 150 ) / 100;
 
         this.$object.style.transition='transform '+speed+'s linear';
         this.$object.style.transform='translate3d('+next.x+'px, '+next.y+'px, 0)';
