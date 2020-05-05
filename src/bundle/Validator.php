@@ -28,7 +28,8 @@ class Validator
                 call_user_func_array([$this, $key], [$data, $field, $value]);
             }
 
-            $newData[$field] = htmlspecialchars($data[$field]);
+            $newData[$field] = is_array($data[$field]) ?
+                $data[$field] : htmlspecialchars($data[$field]);
         }
 
         return $newData;

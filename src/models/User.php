@@ -32,6 +32,7 @@ class User extends Model
         }
 
         Session::set('user', $user);
+        Session::set('token', $user->token);
         Session::doLogin();
 
         return true;
@@ -41,6 +42,7 @@ class User extends Model
     {
         $values['cdate']    = date('Y-m-d');
         $values['password'] = md5($values['password']);
+        $values['token']    = md5($values['password'].time());
 
         if (!empty(self::get($values['name'], $values['password']))) {
             $validator = new Validator();

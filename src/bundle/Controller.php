@@ -10,8 +10,6 @@ abstract class Controller
 
     public function __construct($params)
     {
-        Session::init();
-
         $this->request   = new Request();
         $this->validator = new Validator();
         $this->params    = $params;

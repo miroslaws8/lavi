@@ -21,7 +21,7 @@
                 Теперь вы можете начать настройку.
             </small>
         </div>
-        <a target="_blank" href="/settings" style="margin-top: 20px"
+        <a href="/settings" style="margin-top: 20px"
            class="btn btn-info">Настроить тест</a>
         <a href="/logout" style="margin-top: 20px"
            class="btn btn-danger">Выйти</a>

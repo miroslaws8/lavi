@@ -1,4 +1,5 @@
 const App = {
+    token: null,
     mover: null,
     cancel: false,
     stopped: false,
@@ -6,8 +7,9 @@ const App = {
     timer: null,
     cursorOut: 0,
     success: 0,
+    outSide: {top: 0, bottom: 0, left: 0, right: 0},
     headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
     },
 
     observer: function () {
@@ -81,7 +83,7 @@ const App = {
         jQuery('#stop').prop('disabled', false);
 
         let settingScene = this.getSceneSettings();
-        console.log(settingScene);
+
         for (let key in settingScene) {
             if (!settingScene.hasOwnProperty(key)) {
                 continue;
@@ -108,7 +110,6 @@ const App = {
 
     startTimer: function() {
         this.timer = setInterval(() => {
-            this.doDisplayQuestion();
             this.time = this.time - 1000;
 
             let htmlTime = this.time / 1000;
@@ -121,6 +122,13 @@ const App = {
                 return true;
             }
         }, 1000);
+
+        let q = setInterval(() => {
+            this.doDisplayQuestion();
+            if (this.time <= 0) {
+                clearInterval(q);
+            }
+        }, 30000)
     },
 
     getHtmlTime: function(time) {
@@ -143,7 +151,12 @@ const App = {
             this.time = parseInt(localStorage.getItem('time').replace(':', '')) * 1000;
             this.timer = null;
 
-            window.location = '/endgame'
+            let data = {
+                'outside': this.outSide,
+                'success': this.success
+            };
+
+            this.addEndGame(data);
         }
 
         jQuery(el).prop('disabled', true);
@@ -222,12 +235,16 @@ const App = {
 
     observerCube: function () {
         const handler = (event) => {
+            if (this.stopped === true) {
+                return;
+            }
+
             if (event.type === 'mouseover') {
                 event.target.style.background = 'pink';
                 document.getElementById('game-scene').style.background = localStorage.getItem('background-color');
             }
             if (event.type === 'mouseout') {
-                this.cursorOut++;
+                this.setOutSide(event.clientX, event.clientY);
                 document.getElementById('cursorError').innerHTML = this.cursorOut;
                 event.target.style.background = '';
                 document.getElementById('game-scene').style.background = localStorage.getItem('background-color-error');
@@ -238,11 +255,13 @@ const App = {
         cube.onmouseover = cube.onmouseout = handler;
 
         const handlerClick = (event) => {
+            if (this.stopped === true) {
+                return;
+            }
             let res = this.spaceship(this.answer, this.quest);
 
             if (event.which === 1 && res === 1) {
                 this.success++;
-                console.log(this.success);
             }
 
             if (event.which === 2 && res === 0) {
@@ -253,11 +272,40 @@ const App = {
                 this.success++;
             }
 
+            this.doDisplayQuestion();
+
             document.getElementById('success').innerHTML = this.success;
         };
 
         document.oncontextmenu = () => false;
         document.getElementById('game-scene').onmousedown = handlerClick;
+    },
+
+    setOutSide: function(mouseX, mouseY) {
+        this.cursorOut++;
+
+        let cube = document.getElementById('cube');
+        let coords = cube.getBoundingClientRect();
+
+        if (mouseX < coords.left) {
+            this.outSide.left++;
+            return;
+        }
+
+        if (mouseX > coords.left + coords.width) {
+            this.outSide.right++;
+            return;
+        }
+
+        if (mouseY < coords.top) {
+            this.outSide.top++;
+            return;
+        }
+
+        if (mouseY > coords.top + coords.height) {
+            this.outSide.bottom++;
+            return;
+        }
     },
 
     spaceship: function(a, b) {
@@ -272,33 +320,17 @@ const App = {
         return -1;
     },
 
-    addTask: function () {
-        let data = this.getFormObj('form-addTask');
-        this.post('tasks/add', data).then((res) => {
+    addEndGame: function (data) {
+        this.headers['access-token'] = this.token;
+        this.post('endgame/add', data).then((res) => {
             if (res.hasOwnProperty('error') && res.error === true) {
-                jQuery('#addTask .alert').addClass('alert-danger').addClass('show');
-                jQuery('#addTask .modal-error').html(res.message);
                 return false;
             }
 
-            jQuery('#addTask .alert').addClass('alert-success').addClass('show');
-            jQuery('#addTask .modal-error').html(res.message);
+            console.log(res);
 
-            setTimeout(function () {
-                document.location.reload(true);
-            }, 200)
+            window.location = `/endgame/${res.id_game}`;
         });
-    },
-
-    getFormObj: function (formId) {
-        let formObj = {};
-        let inputs = jQuery('#'+formId).serializeArray();
-
-        jQuery.each(inputs, function (i, input) {
-            formObj[input.name] = input.value;
-        });
-
-        return formObj;
     },
 
     post: async function (url = '', data = {}) {

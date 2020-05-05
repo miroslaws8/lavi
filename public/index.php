@@ -50,8 +50,12 @@ $router->add('game',
     ['controller' => 'GameController', 'action' => 'index']
 );
 
-$router->add('endgame',
+$router->add('endgame/{id:\d+}',
     ['controller' => 'GameController', 'action' => 'endgame']
+);
+
+$router->add('endgame/add',
+    ['controller' => 'GameController', 'action' => 'add']
 );
 
 

@@ -178,6 +178,8 @@ class Model
             ->prepare($sql);
 
         $this->doExecute($values);
+
+        return $this->lastInsertedId();
     }
 
     public function doUpdate(array $values, int $id)
