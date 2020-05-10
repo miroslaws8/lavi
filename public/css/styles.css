@@ -236,3 +236,23 @@ body, html {
 .m-table {
     color: #fff;
 }
+
+.block-result {
+    margin-top: 15px;
+    border: 1px solid #fff;
+    padding: 5px 10px;
+}
+
+.block-result-success {
+    color: #fff;
+}
+
+.block-result-danger {
+    color: #fff;
+}
+
+.endgame-container {
+    width: 60%;
+    height: fit-content;
+    margin: 20px auto;
+}

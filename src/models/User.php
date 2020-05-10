@@ -31,6 +31,10 @@ class User extends Model
             return false;
         }
 
+        static::update(['token' => md5($user['password'].time())],
+            $user['id']
+        );
+
         Session::set('user', $user);
         Session::set('token', $user->token);
         Session::doLogin();
@@ -40,9 +44,11 @@ class User extends Model
 
     public static function signup(array $values) : bool
     {
-        $values['cdate']    = date('Y-m-d');
-        $values['password'] = md5($values['password']);
-        $values['token']    = md5($values['password'].time());
+        $data = $values;
+
+        $data['password'] = md5($values['password']);
+        $data['cdate']    = date('Y-m-d');
+        $data['token']    = md5($values['password'].time());
 
         if (!empty(self::get($values['name'], $values['password']))) {
             $validator = new Validator();

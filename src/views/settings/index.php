@@ -5,6 +5,15 @@ bundle\View::render('layouts/default/header.php');
     <div class="list scene-settings" id="scene-settings">
         <form method="post" action="/settings/action">
             <div class="form-group">
+                <label for="groupBy">Группировка ответов:</label>
+                <select class="form-control" id="groupBy" name="groupBy">
+                    <option value="5">По 5 ответов</option>
+                    <option value="10">По 10 ответов</option>
+                    <option value="15">По 15 ответов</option>
+                    <option value="20">По 20 ответов</option>
+                </select>
+            </div>
+            <div class="form-group">
                 <label for="time">Время теста:</label>
                 <input name="time" value="<?= $settings['time'] ?? '' ?>" type="time" class="form-control" id="time">
             </div>

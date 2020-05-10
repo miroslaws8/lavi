@@ -3,10 +3,11 @@ const App = {
     mover: null,
     cancel: false,
     stopped: false,
+    settings: null,
     time: null,
     timer: null,
     cursorOut: 0,
-    success: 0,
+    success: [],
     outSide: {top: 0, bottom: 0, left: 0, right: 0},
     headers: {
         'Content-Type': 'application/json',
@@ -31,7 +32,7 @@ const App = {
             });
         });
 
-        jQuery('#scene-settings input').bind('change keyup', function (el) {
+        jQuery('#scene-settings input, #scene-settings select').bind('change keyup', function (el) {
              let val = jQuery(el.target).val();
              let css = jQuery(el.target).prop('id');
 
@@ -215,10 +216,10 @@ const App = {
 
     getSettingsCube: function () {
         let settings = {
-            'border-color': localStorage.getItem('border-color'),
-            'border-width': localStorage.getItem('border-width'),
-            'height': localStorage.getItem('height'),
-            'width': localStorage.getItem('width'),
+            'border-color': this.settings['border-color'],
+            'border-width': this.settings['border-width'],
+            'height': this.settings['height'],
+            'width': this.settings['width'],
         };
 
         return settings;
@@ -226,8 +227,8 @@ const App = {
 
     getSceneSettings: function () {
         let settings = {
-            'background': localStorage.getItem('background-color'),
-            'color': localStorage.getItem('color'),
+            'background': this.settings['background'],
+            'color': this.settings['color'],
         };
 
         return settings;
@@ -261,20 +262,16 @@ const App = {
             let res = this.spaceship(this.answer, this.quest);
 
             if (event.which === 1 && res === 1) {
-                this.success++;
-            }
-
-            if (event.which === 2 && res === 0) {
-                this.success++;
-            }
-
-            if (event.which === 3 && res === -1) {
-                this.success++;
+                this.success.push('true');
+            } else if (event.which === 2 && res === 0) {
+                this.success.push('true');
+            } else if (event.which === 3 && res === -1) {
+                this.success.push('true');
+            } else {
+                this.success.push('false');
             }
 
             this.doDisplayQuestion();
-
-            document.getElementById('success').innerHTML = this.success;
         };
 
         document.oncontextmenu = () => false;

@@ -36,8 +36,9 @@ class GameController extends Controller
         }
 
         View::render('game/index.php', [
-            'configs' =>$config,
-            'token' => $user['token']
+            'configs'  =>$config,
+            'settings' => $user['settings'],
+            'token'    => $user['token']
         ]);
     }
 
@@ -93,7 +94,11 @@ class GameController extends Controller
             throw new \Exception('Что-то пошло не так.');
         }
 
+        $user = User::getOne(['id' => Session::get('user')->id]);
+        $settings = json_decode($user['settings'], true);
+
         $data = [
+            'settings' => $settings,
             'success' => $results['success'],
             'date'    => $gameData['cdate'],
             'outside' => $results['outside'],

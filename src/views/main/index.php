@@ -18,9 +18,13 @@
         <h1 style="color: #fff;">Приветствуем, <?= $user->name ?>!</h1>
         <div style="width: 300px">
             <small style="color:#fff;">
-                Теперь вы можете начать настройку.
+                Теперь вы можете начать тест или его настройку.
             </small>
         </div>
+        <?php if (!empty($user->settings)) : ?>
+        <a href="/game" style="margin-top: 20px"
+           class="btn btn-success">Начать тест</a>
+        <?php endif; ?>
         <a href="/settings" style="margin-top: 20px"
            class="btn btn-info">Настроить тест</a>
         <a href="/logout" style="margin-top: 20px"
