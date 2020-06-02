@@ -2,10 +2,10 @@
 
 namespace controllers;
 
-use bundle\Controller;
-use bundle\Redirector;
-use bundle\Response;
-use bundle\Session;
+use bundles\Controller;
+use bundles\Redirector;
+use bundles\Response;
+use bundles\Session;
 use models\Task;
 
 class TaskController extends Controller

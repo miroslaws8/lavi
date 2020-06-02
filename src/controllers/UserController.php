@@ -2,10 +2,10 @@
 
 namespace controllers;
 
-use bundle\Controller;
-use bundle\Redirector;
-use bundle\Session;
-use bundle\View;
+use bundles\Controller;
+use bundles\Redirector;
+use bundles\Session;
+use bundles\View;
 use models\User;
 
 class UserController extends Controller

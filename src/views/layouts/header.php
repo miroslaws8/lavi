@@ -8,7 +8,7 @@
             <ul class="navbar-nav">
             </ul>
         </div>
-        <?php if (!\bundle\Session::getIsLoggedIn()) { ?>
+        <?php if (!\bundles\Session::getIsLoggedIn()) { ?>
             <a href="/signup" class="btn btn-primary my-2 my-sm-0">Регистрация</a>
         <?php } ?>
     </div>

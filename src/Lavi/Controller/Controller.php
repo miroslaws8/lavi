@@ -1,6 +1,6 @@
 <?php
 
-namespace bundle;
+namespace Lavi\Controller;
 
 abstract class Controller
 {
@@ -28,7 +28,7 @@ abstract class Controller
     {
         $method = 'do'.$name;
         if (!method_exists($this, $method)) {
-            throw new \Exception("Method $name not found in controller " . get_class($this));
+            throw new \Exception("Method $name not found in Controller " . get_class($this));
         }
 
         if ($this->before() !== false) {

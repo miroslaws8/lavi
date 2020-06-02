@@ -2,11 +2,11 @@
 
 namespace controllers;
 
-use bundle\Controller;
-use bundle\Response;
-use bundle\View;
-use bundle\Session;
-use bundle\Redirector;
+use bundles\Controller;
+use bundles\Response;
+use bundles\View;
+use bundles\Session;
+use bundles\Redirector;
 use models\Game;
 use models\User;
 

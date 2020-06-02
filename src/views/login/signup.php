@@ -1,9 +1,9 @@
 <?php
-bundle\View::render('layouts/default/header.php');
+bundles\View::render('layouts/default/header.php');
 ?>
 <div class="position-center" style="width: fit-content;height: fit-content;">
     <?php
-    $validator = new \bundle\Validator();
+    $validator = new \bundles\Validator();
     $error     = $validator->getError();
     if (!empty($error)) {
         ?>
@@ -31,5 +31,5 @@ bundle\View::render('layouts/default/header.php');
     </div>
 </div>
 <?php
-bundle\View::render('layouts/default/footer.php');
+bundles\View::render('layouts/default/footer.php');
 ?>

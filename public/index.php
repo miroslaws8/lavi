@@ -1,62 +1,16 @@
 <?php
 
-require_once '../vendor/autoload.php';
+require_once __DIR__.'/../vendor/autoload.php';
 
-define('APP', __DIR__.DIRECTORY_SEPARATOR);
-define("PUBLIC_ROOT", __DIR__.DIRECTORY_SEPARATOR);
+$config = new Lavi\Config\Config();
+$app    = new Lavi\Lavi($config);
 
-\bundle\Session::init();
+$app->router->add('test', [
+    'Controller' => 'Home', 'action' => 'index'
+]);
 
-$router = new bundle\Router();
-
-$router->add('',
-    ['controller' => 'HomeController', 'action' => 'index']
-);
-
-$router->add('logout',
-    ['controller' => 'UserController', 'action' => 'logout']
-);
-
-$router->add('signup',
-    ['controller' => 'UserController', 'action' => 'index']
-);
-
-$router->add('signup/action',
-    ['controller' => 'UserController', 'action' => 'signup']
-);
-
-$router->add('signin',
-    ['controller' => 'UserController', 'action' => 'displaySignin']
-);
-
-$router->add('signin/action',
-    ['controller' => 'UserController', 'action' => 'signin']
-);
-
-
-/* Settings */
-
-$router->add('settings',
-    ['controller' => 'SettingsController', 'action' => 'index']
-);
-
-$router->add('settings/action',
-    ['controller' => 'SettingsController', 'action' => 'addSettings']
-);
-
-/* Game */
-
-$router->add('game',
-    ['controller' => 'GameController', 'action' => 'index']
-);
-
-$router->add('endgame/{id:\d+}',
-    ['controller' => 'GameController', 'action' => 'endgame']
-);
-
-$router->add('endgame/add',
-    ['controller' => 'GameController', 'action' => 'add']
-);
-
-
-$router->dispatch($_SERVER['QUERY_STRING']);
+try {
+    $app->run();
+} catch (Exception $exception) {
+    echo $exception->getMessage();
+}

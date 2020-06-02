@@ -1,28 +1,28 @@
 <?php
 
-namespace bundle;
+namespace Lavi\Router;
 
 class Router
 {
     protected $routes = [];
     protected $params = [];
 
-    public function add($route, $params = [])
+    public function add(string $route, array $params = []): void
     {
         $route = preg_replace('/\//', '\\/', $route);
         $route = preg_replace('/\{([a-z]+)\}/', '(?P<\1>[a-z-]+)', $route);
         $route = preg_replace('/\{([a-z]+):([^\}]+)\}/', '(?P<\1>\2)', $route);
-        $route = '/^' . $route . '$/i';
+        $route = '/^'.trim($route, '/').'$/i';
 
         $this->routes[$route] = $params;
     }
 
-    public function getRoutes()
+    public function getRoutes(): array
     {
         return $this->routes;
     }
 
-    public function match($url)
+    public function match(string $url): bool
     {
         foreach ($this->routes as $route => $params) {
             if (preg_match($route, $url, $matches)) {
@@ -40,45 +40,27 @@ class Router
         return false;
     }
 
-    public function getParams()
+    public function getParams(): array
     {
         return $this->params;
     }
 
-    public function dispatch($url)
+    public function dispatch(string $url)
     {
         $url = $this->removeQueryStringVariables($url);
 
-        try {
-            if (!$this->match($url)) {
-                throw new \Exception('No route matched.', 404);
-            }
-
-            $controller = $this->params['controller'];
-            $controller = $this->convertToStudlyCaps($controller);
-            $controller = $this->getNamespace() . $controller;
-
-            if (!class_exists($controller)) {
-                throw new \Exception("Controller class $controller not found");
-            }
-
-            $instance = $this->factoryController($controller);
-
-            $action = $this->params['action'];
-            $action = $this->convertToCamelCase($action);
-
-            if (!preg_match('/action$/i', $action) == 0) {
-                throw new \Exception("Method $action in controller $controller not found");
-            }
-
-
-            $instance->$action();
-        } catch (\Exception $exp) {
-            View::render('layouts/default/error.php', [
-                'message' => $exp->getMessage(),
-                'code'    => $exp->getCode()
-            ]);
+        if (!$this->match($url)) {
+            throw new \Exception('No route matched.', 404);
         }
+
+        $controller = $this->params['Controller'];
+        $controller = $this->convertToStudlyCaps($controller);
+        $controller = $this->getNamespace().$controller.'Controller';
+
+        $action = $this->params['action'];
+        $action = $this->convertToCamelCase($action);
+
+        return [$controller, $action];
     }
 
     protected function convertToStudlyCaps($string)
@@ -115,10 +97,5 @@ class Router
         }
 
         return $namespace;
-    }
-
-    private function factoryController($controller)
-    {
-        return new $controller($this->params);
     }
 }

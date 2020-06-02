@@ -1,11 +1,11 @@
 <?php
 
-namespace bundle;
+namespace bundles\request;
 
 class Request
 {
     public $params = [
-        "controller" => null,
+        "Controller" => null,
         "action"     => null,
         "args"       => null
     ];

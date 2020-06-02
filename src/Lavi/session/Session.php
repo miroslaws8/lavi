@@ -1,6 +1,6 @@
 <?php
 
-namespace bundle;
+namespace bundles\session;
 
 class Session
 {

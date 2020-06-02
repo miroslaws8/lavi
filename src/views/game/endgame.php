@@ -1,5 +1,5 @@
 <?php
-bundle\View::render('layouts/default/header.php');
+bundles\View::render('layouts/default/header.php');
 ?>
     <div class="endgame-container">
         <h1 style="color: #fff;">Тест окончен</h1>
@@ -75,5 +75,5 @@ bundle\View::render('layouts/default/header.php');
     </div>
 
 <?php
-bundle\View::render('layouts/default/footer.php');
+bundles\View::render('layouts/default/footer.php');
 ?>

@@ -1,5 +1,5 @@
 <?php
-bundle\View::render('layouts/default/header.php');
+bundles\View::render('layouts/default/header.php');
 ?>
 <div class="settings">
     <div style="margin: 10px 0;">
@@ -62,7 +62,7 @@ bundle\View::render('layouts/default/header.php');
 </div>
 
 <?php
-bundle\View::render('layouts/default/footer.php');
+bundles\View::render('layouts/default/footer.php');
 ?>
 <script async>
     App.token = '<?php echo $token; ?>';

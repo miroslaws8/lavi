@@ -1,5 +1,5 @@
 <?php
-bundle\View::render('layouts/default/header.php');
+bundles\View::render('layouts/default/header.php');
 ?>
 <div class="settings">
     <div class="list scene-settings" id="scene-settings">
@@ -59,5 +59,5 @@ bundle\View::render('layouts/default/header.php');
     </div>
 </div>
 <?php
-bundle\View::render('layouts/default/footer.php');
+bundles\View::render('layouts/default/footer.php');
 ?>

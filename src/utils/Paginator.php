@@ -2,8 +2,8 @@
 
 namespace utils;
 
-use bundle\Request;
-use bundle\View;
+use bundles\Request;
+use bundles\View;
 
 class Paginator
 {

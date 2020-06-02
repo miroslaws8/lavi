@@ -2,10 +2,10 @@
 
 namespace models;
 
-use bundle\Model;
-use bundle\Redirector;
-use bundle\Session;
-use bundle\Validator;
+use bundles\Model;
+use bundles\Redirector;
+use bundles\Session;
+use bundles\Validator;
 
 class User extends Model
 {

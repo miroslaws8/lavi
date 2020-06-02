@@ -1,8 +1,33 @@
 <?php
-    bundle\View::render('layouts/default/header.php');
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
+
+$arr = [
+    [3, 5, 3, 13],
+    [15, 6, 7,  8],
+    [15, 6, 7,  8],
+    [9, 10, 11, 12]
+];
+
+function transponse($input)
+{
+    foreach($input as $key => $value) {
+        foreach($value as $key1 => $value_of_array) {
+            $arr[$key1][$key] = $value_of_array;
+        }
+    }
+    return $arr;
+}
+
+foreach(transponse($arr) as $row) {
+    print_r($row);
+}
+exit;
+
+bundles\View::render('layouts/default/header.php');
 ?>
 <div class="position-center" style="width: fit-content;height: fit-content;">
-    <?php if (!\bundle\Session::getIsLoggedIn()): ?>
+    <?php if (!\bundles\Session::getIsLoggedIn()): ?>
         <h1 style="color: #fff;">АМОД</h1>
         <div style="width: 300px">
             <span style="color:#fff;">
@@ -33,5 +58,5 @@
 </div>
 
 <?php
-    bundle\View::render('layouts/default/footer.php');
+    bundles\View::render('layouts/default/footer.php');
 ?>

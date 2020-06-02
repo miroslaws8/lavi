@@ -1,6 +1,6 @@
 <?php
 
-namespace bundle;
+namespace Lavi\Response;
 
 class Response
 {

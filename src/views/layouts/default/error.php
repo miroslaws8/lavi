@@ -1,5 +1,5 @@
 <?php
-bundle\View::render('layouts/default/header.php');
+bundles\View::render('layouts/default/header.php');
 ?>
 <div class="position-center" style="width: fit-content;height: fit-content;">
     <h1 style="color: #fff;">Error</h1>

@@ -2,7 +2,7 @@
 
 namespace utils;
 
-use bundle\Config;
+use bundles\Config;
 
 class Uploader
 {
