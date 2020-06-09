@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="dd05a3ef-2713-4462-ac7f-43132fc60952" name="sila-sveta" url="http://37.140.192.78">
+        <fileTransfer host="37.140.192.78" port="22" rootFolder="/var/www/u0917490/data" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+      <webServer id="8eeb6572-e127-4ed1-a3ab-beb1e0242215" name="mir.dev-source.ru" url="http://ruvip29.hostiman.ru">
+        <fileTransfer host="ruvip29.hostiman.ru" port="21">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="21" />
+        </fileTransfer>
+      </webServer>
+      <webServer id="9201857a-9abe-4d5d-a5f5-5175abd021b5" name="game" url="http://37.140.192.23">
+        <fileTransfer host="37.140.192.23" port="22" rootFolder="/var/www/u1028064/data" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+      <webServer id="0743fdf8-43d7-4fbd-b73e-596cd05e6f77" name="blackdolph" url="http://ruvip32.hostiman.ru">
+        <fileTransfer host="ruvip32.hostiman.ru" port="21">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="21" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
