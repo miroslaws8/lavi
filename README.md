@@ -7,6 +7,7 @@
 3. Write the configuration file in `public/config.php`
 4. It's all !
 
+<<<<<<< README.md
 ### Config (in progress)
 
 Wait...
