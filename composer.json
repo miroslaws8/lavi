@@ -1,21 +1,21 @@
 {
-    "name": "miro/lavi",
-    "authors": [
-        {
-            "name": "miroslaw",
-            "email": "vip93951247@gmail.com"
-        }
-    ],
-    "autoload": {
-        "psr-4": { "": "src/" }
-    },
-    "require": {
-        "php": ">=7.1"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^8"
-    },
-    "scripts": {
-        "test": "phpunit tests/"
+  "name": "miro/lavi",
+  "authors": [
+    {
+      "name": "miroslaw",
+      "email": "vip93951247@gmail.com"
     }
+  ],
+  "autoload": {
+    "psr-4": { "": "src/" }
+  },
+  "require": {
+    "php": ">=7.1"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^8"
+  },
+  "scripts": {
+    "test": "phpunit tests/"
+  }
 }
