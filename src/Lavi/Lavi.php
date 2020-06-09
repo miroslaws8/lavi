@@ -2,31 +2,25 @@
 
 namespace Lavi;
 
-
+use Lavi\Request\Request;
 use Lavi\Response\Response;
-use Lavi\Router\Router;
 use Lavi\Config\Config;
+use Lavi\Router\IRouter;
 
 class Lavi
 {
-    public $router;
-
+    public $request;
     private $config;
 
     public function __construct(Config $config)
     {
-        $this->config = $config;
-        $this->router = $this->factoryRouter();
+        $this->config  = $config;
+        $this->request = new Request();
     }
 
-    public function factoryRouter()
+    public function run(IRouter $router)
     {
-        return new Router;
-    }
-
-    public function run()
-    {
-        $handler = $this->router->dispatch($_SERVER['QUERY_STRING']);
+        $handler = $router->dispatch($this->request->getUri());
 
         if (!is_callable($handler)) {
             throw new \Exception('Action not found!');

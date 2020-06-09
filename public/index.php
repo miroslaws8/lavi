@@ -4,13 +4,10 @@ require_once __DIR__.'/../vendor/autoload.php';
 
 $config = new Lavi\Config\Config();
 $app    = new Lavi\Lavi($config);
+$router = new Lavi\Router\Router();
 
-$app->router->add('test', [
-    'Controller' => 'Home', 'action' => 'index'
+$router->add('test', [
+    'namespace' => 'controllers', 'Controller' => 'Home', 'action' => 'index'
 ]);
 
-try {
-    $app->run();
-} catch (Exception $exception) {
-    echo $exception->getMessage();
-}
+$app->run($router);

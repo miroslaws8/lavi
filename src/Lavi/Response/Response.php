@@ -4,20 +4,25 @@ namespace Lavi\Response;
 
 class Response
 {
-    public static function send($content = null)
+    public function send($content = null): Response
     {
-        self::sendContent($content);
-        self::flushBuffer();
+        $this->sendContent($content);
+        $this->flushBuffer();
 
-        return true;
+        return $this;
     }
 
-    private static function flushBuffer()
+    public function withHeader()
+    {
+
+    }
+
+    private function flushBuffer()
     {
         flush();
     }
 
-    private static function sendContent($content)
+    private function sendContent($content)
     {
         if (is_array($content)) {
             $content = json_encode($content);

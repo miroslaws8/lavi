@@ -2,7 +2,7 @@
 
 namespace Lavi\Router;
 
-class Router
+class Router implements IRouter
 {
     protected $routes = [];
     protected $params = [];
@@ -45,7 +45,7 @@ class Router
         return $this->params;
     }
 
-    public function dispatch(string $url)
+    public function dispatch(string $url): array
     {
         $url = $this->removeQueryStringVariables($url);
 
@@ -88,14 +88,12 @@ class Router
         return $url;
     }
 
-    protected function getNamespace()
+    protected function getNamespace(): string
     {
-        $namespace = 'controllers\\';
-
         if (array_key_exists('namespace', $this->params)) {
-            $namespace .= $this->params['namespace'] . '\\';
+            return $this->params['namespace'] . '\\';
         }
 
-        return $namespace;
+        return 'controllers\\';
     }
 }

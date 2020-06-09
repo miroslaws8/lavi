@@ -1,6 +1,6 @@
 <?php
 
-namespace bundles\request;
+namespace Lavi\Request;
 
 class Request
 {
@@ -24,6 +24,11 @@ class Request
     {
         $this->params = array_merge($this->params, $params);
         return $this;
+    }
+
+    public function getUri()
+    {
+        return $_SERVER['QUERY_STRING'];
     }
 
     public function getQueries()
