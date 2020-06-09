@@ -17,3 +17,4 @@ RewriteRule ((?s).*) public/$1 [L]
     php_flag register_globals    off
     php_flag session.auto_start  off
 </IfModule>
+
