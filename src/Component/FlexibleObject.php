@@ -3,7 +3,6 @@
 namespace Lavi\Component;
 
 use Exception;
-use Traversable;
 
 class FlexibleObject implements \IteratorAggregate
 {

@@ -4,5 +4,4 @@ namespace Lavi\Model;
 
 interface IDBRecord
 {
-
 }
