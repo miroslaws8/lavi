@@ -57,35 +57,6 @@ There are 2 events that you can subscribe to in the controller.
 
 Methods that must be subscribed to these events must begin with the prefix `do`.
 
-### DataBase Repository (in progress)
-
-Methods:
-
-You can call model methods both static and through `$this`.
-
-1. `getAll(?array $where, ?string $orderBy)`
-2. `getOne(?array $where)`
-3. `insert(array $values)`
-4. `update(array $values, int $id)`
-5. `delete(int $id)`
-6. `doPagination(int $offset, int $limit, ?array $where, ?string $orderBy)`
-
-### Utils
-
-**Paginator** (in progress)
-
-This tool allows you to display pagination.
-
-``` php
-$paginator->render(int $current, int $total);
-```
-
-**Uploader**
-
-Methods
-
-1. `uploadPicture($file, $storagePath, $id)`
-
 ### Tests
 Tests run on the PHPUnit library.
 
