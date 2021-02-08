@@ -2,6 +2,8 @@
 
 namespace Lavi\View;
 
+use Lavi\Config\Config;
+
 class View
 {
     public static function render($view, $args = [])

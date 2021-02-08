@@ -2,15 +2,14 @@
 
 namespace Lavi;
 
-use Lavi\Request\Request;
-use Lavi\Response\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Lavi\Config\Config;
 use Lavi\Router\IRouter;
 
 class Lavi
 {
-    public $request;
-    private $config;
+    public Request $request;
+    private Config $config;
 
     public function __construct(Config $config)
     {
@@ -32,6 +31,6 @@ class Lavi
             $response = $exception->getMessage();
         }
 
-        Response::send($response);
+        return $response;
     }
 }

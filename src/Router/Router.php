@@ -4,8 +4,8 @@ namespace Lavi\Router;
 
 class Router implements IRouter
 {
-    protected $routes = [];
-    protected $params = [];
+    protected array $routes = [];
+    protected array $params = [];
 
     public function add(string $route, array $params = []): void
     {
@@ -63,17 +63,17 @@ class Router implements IRouter
         return [$controller, $action];
     }
 
-    protected function convertToStudlyCaps($string)
+    protected function convertToStudlyCaps($string): string
     {
         return str_replace(' ', '', ucwords(str_replace('-', ' ', $string)));
     }
 
-    protected function convertToCamelCase($string)
+    protected function convertToCamelCase($string): string
     {
         return lcfirst($this->convertToStudlyCaps($string));
     }
 
-    protected function removeQueryStringVariables($url)
+    protected function removeQueryStringVariables($url): string
     {
         if ($url != '') {
             $parts = explode('&', $url, 2);

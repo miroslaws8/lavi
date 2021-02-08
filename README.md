@@ -7,9 +7,21 @@
 3. Write the configuration file in `public/config.php`
 4. It's all !
 
-### Config (in progress)
+### Config
 
-Wait...
+
+```php
+    $config = new Lavi\Config\Config();
+
+    // Load to config file
+    $config->load('path_to_file_config.php');
+
+    // Get all config params
+    $config->all();
+
+    // Get param by key
+    $config->get('key');
+```
 
 ### Routes
 

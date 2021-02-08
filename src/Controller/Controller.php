@@ -4,11 +4,12 @@ namespace Lave\Controller;
 
 abstract class Controller
 {
-    protected $params    = [];
+    private const PREFIX = 'do';
+    protected array $params = [];
     protected $request   = null;
     protected $validator = null;
 
-    public function __construct($params)
+    public function __construct(...$params)
     {
         $this->params = $params;
     }
@@ -24,7 +25,7 @@ abstract class Controller
 
     public function __call($name, $args)
     {
-        $method = 'do'.$name;
+        $method = self::PREFIX.$name;
         if (!method_exists($this, $method)) {
             throw new \Exception("Method $name not found in controller " . get_class($this));
         }
