@@ -2,19 +2,26 @@
 
 namespace Lavi;
 
-use Symfony\Component\HttpFoundation\Request;
+use Lavi\Exceptions\LaviException;
+use Lavi\Request\IRequest;
+use Lavi\Request\SymfonyRequestAdapter;
 use Lavi\Config\Config;
 use Lavi\Router\IRouter;
 
 class Lavi
 {
-    public Request $request;
+    public IRequest $request;
     private Config $config;
 
     public function __construct(Config $config)
     {
         $this->config  = $config;
-        $this->request = new Request();
+        $this->request = new SymfonyRequestAdapter();
+    }
+
+    public function setRequest(IRequest $request)
+    {
+        $this->request = $request;
     }
 
     public function run(IRouter $router)
@@ -22,12 +29,12 @@ class Lavi
         $handler = $router->dispatch($this->request->getUri());
 
         if (!is_callable($handler)) {
-            throw new \Exception('Action not found!');
+            throw new LaviException('Action not found!');
         }
 
         try {
             $response = call_user_func($handler);
-        } catch (\Exception $exception) {
+        } catch (LaviException $exception) {
             $response = $exception->getMessage();
         }
 

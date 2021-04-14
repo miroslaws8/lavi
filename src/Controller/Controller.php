@@ -2,11 +2,13 @@
 
 namespace Lave\Controller;
 
+use Lavi\Request\IRequest;
+
 abstract class Controller
 {
     private const PREFIX = 'do';
     protected array $params = [];
-    protected $request   = null;
+    protected IRequest $request;
     protected $validator = null;
 
     public function __construct(...$params)
