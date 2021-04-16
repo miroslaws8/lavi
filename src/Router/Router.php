@@ -110,7 +110,6 @@ class Router implements IRouter
                 }
 
                 $this->params = $params;
-
                 return true;
             }
         }
