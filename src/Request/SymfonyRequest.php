@@ -4,7 +4,7 @@ namespace Lavi\Request;
 
 use Symfony\Component\HttpFoundation\Request;
 
-class SymfonyRequestAdapter extends Request implements IRequest
+class SymfonyRequest extends Request implements IRequest
 {
     public function all()
     {
@@ -19,5 +19,15 @@ class SymfonyRequestAdapter extends Request implements IRequest
     public function has(string $key): bool
     {
         return $this->has($key);
+    }
+
+    public function getHeaders()
+    {
+        return $this->headers;
+    }
+
+    public function getRequest()
+    {
+        return $this->request;
     }
 }

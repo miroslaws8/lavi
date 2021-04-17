@@ -4,5 +4,5 @@ namespace Lavi\Router;
 
 interface IRouter
 {
-    public function dispatch(string $uri): array;
+    public function dispatch(string $uri): Route;
 }

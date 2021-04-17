@@ -4,24 +4,27 @@ namespace Lavi\Router;
 
 class RouterParamsValidator implements IRouterParamsValidator
 {
-    private const CONTROLLER = 'controller';
-    private const ACTION = 'action';
+    public const CONTROLLER = 'controller';
+    public const ACTION = 'action';
 
-    public array $errors;
-
+    private array $errors = [];
     private array $neededParams = [self::CONTROLLER, self::ACTION];
+
+    public function getError(): string
+    {
+        return implode(';', $this->errors);
+    }
 
     public function validate(array $params): bool
     {
-        if (empty($params)) {
-            return false;
-        }
-
         foreach ($this->neededParams as $neededParam) {
             if (!array_key_exists($neededParam, $params)) {
-                $this->errors[$neededParam] = 'Empty';
-                continue;
+                $this->errors[$neededParam] = "$neededParam: empty";
             }
+        }
+
+        if (!empty($this->errors)) {
+            return false;
         }
 
         return true;

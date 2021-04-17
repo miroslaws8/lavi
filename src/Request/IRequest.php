@@ -9,4 +9,5 @@ interface IRequest
     public function set(string $key, mixed $value);
     public function has(string $key);
     public function getUri();
+    public function getHeaders();
 }

@@ -89,7 +89,7 @@ class Router implements IRouter
     /**
      * @throws RouteException
      */
-    public function match(string $url): bool
+    protected function match(string $url): bool
     {
         $routes = $this->getRoutesByMethod($this->getHttpMethod());
 
@@ -106,7 +106,7 @@ class Router implements IRouter
                 }
 
                 if (!$this->paramsValidator->validate($params)) {
-                    throw new RouteException($this->paramsValidator->errors);
+                    throw new RouteException($this->paramsValidator->getError());
                 }
 
                 $this->params = $params;
@@ -125,7 +125,7 @@ class Router implements IRouter
     /**
      * @throws Exception
      */
-    public function dispatch(string $url): array
+    public function dispatch(string $url): Route
     {
         $url = $this->removeQueryStringVariables($url);
 
@@ -133,14 +133,23 @@ class Router implements IRouter
             throw new RouteException('No route matched.', 404);
         }
 
-        $controller = $this->params['Controller'];
+        $controller = $this->params[RouterParamsValidator::CONTROLLER];
         $controller = $this->convertToStudlyCaps($controller);
-        $controller = $this->getNamespace().$controller.'Controller';
+        $controller = $this->getNamespace().$controller;
 
-        $action = $this->params['action'];
+        $this->params[RouterParamsValidator::CONTROLLER] = $controller;
+
+        $action = $this->params[RouterParamsValidator::ACTION];
         $action = $this->convertToCamelCase($action);
 
-        return [$controller, $action];
+        $this->params[RouterParamsValidator::ACTION] = $action;
+
+        return $this->createRoute();
+    }
+
+    protected function createRoute()
+    {
+        return new Route($this->params);
     }
 
     protected function convertToStudlyCaps($string): string

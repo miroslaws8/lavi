@@ -2,26 +2,34 @@
 
 namespace Lavi;
 
-use Lavi\Container\IContainer;
 use Lavi\Exceptions\LaviException;
 use Lavi\Exceptions\RouteException;
+use Lavi\Middleware\Dispatcher;
 use Lavi\Request\IRequest;
-use Lavi\Request\SymfonyRequestAdapter;
-use Lavi\Config\Config;
+use Lavi\Request\SymfonyRequest;
+use Lavi\Response\ApiResponse;
 use Lavi\Router\IRouter;
+use Psr\Container\ContainerInterface;
 
 class Lavi
 {
     public IRequest $request;
-    private ?IContainer $container;
+    private ?ContainerInterface $container;
 
-    public function __construct(IContainer $container = null)
+    public function __construct(ContainerInterface $container = null)
     {
         $this->container = $container;
-        $this->request = SymfonyRequestAdapter::createFromGlobals();
+
+        $request = SymfonyRequest::createFromGlobals();
+
+        $this->request = $request;
+        $this->container->set(IRequest::class, $request);
+        $this->container->set(ApiResponse::class, function () {
+            return new ApiResponse();
+        });
     }
 
-    public function getContainer(): IContainer
+    public function getContainer(): ContainerInterface
     {
         return $this->container;
     }
@@ -31,16 +39,26 @@ class Lavi
         $this->request = $request;
     }
 
+    /**
+     * @throws RouteException
+     */
     public function run(IRouter $router)
     {
-        $handler = $router->dispatch($this->request->getPathInfo());
+        $route = $router->dispatch($this->request->getPathInfo());
 
-        if (!is_callable($handler)) {
+        if (!method_exists($route->getController(), $route->getMethod())) {
             throw new RouteException('Action not found!');
         }
 
         try {
-            $response = call_user_func($handler);
+            $default = function () use ($route) {
+                $controllerInstance = $this->container->make($route->getController());
+                return $this->container->call([$controllerInstance, $route->getMethod()], $route->getParams());
+            };
+
+            $dispatcher = new Dispatcher($route->getMiddlewares());
+
+            $response = $dispatcher->dispatch($this->container->get(IRequest::class), $default);
         } catch (LaviException $exception) {
             $response = $exception->getMessage();
         }
