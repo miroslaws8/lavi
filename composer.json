@@ -8,7 +8,7 @@
     }
   ],
   "autoload": {
-    "psr-4": { "": "src/" }
+    "psr-4": { "Lavi\\": "src/" }
   },
   "require": {
     "php": ">=7.3",
