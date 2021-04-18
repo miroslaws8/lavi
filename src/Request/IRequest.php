@@ -10,4 +10,5 @@ interface IRequest
     public function has(string $key);
     public function getUri();
     public function getHeaders();
+    public function getQueries();
 }

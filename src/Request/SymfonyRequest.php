@@ -30,4 +30,9 @@ class SymfonyRequest extends Request implements IRequest
     {
         return $this->request;
     }
+
+    public function getQueries()
+    {
+        return $this->query;
+    }
 }

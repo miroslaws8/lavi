@@ -9,6 +9,7 @@ use Lavi\Request\IRequest;
 use Lavi\Request\SymfonyRequest;
 use Lavi\Response\ApiResponse;
 use Lavi\Router\IRouter;
+use Lavi\Router\Route;
 use Psr\Container\ContainerInterface;
 
 class Lavi
@@ -56,7 +57,9 @@ class Lavi
                 return $this->container->call([$controllerInstance, $route->getMethod()], $route->getParams());
             };
 
-            $dispatcher = new Dispatcher($route->getMiddlewares());
+            $dispatcher = $this->container->make(Dispatcher::class, [
+                Route::ROUTE_MIDDLEWARES => $route->getMiddlewares()
+            ]);
 
             $response = $dispatcher->dispatch($this->container->get(IRequest::class), $default);
         } catch (LaviException $exception) {

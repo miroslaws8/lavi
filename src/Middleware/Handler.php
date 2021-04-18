@@ -3,18 +3,20 @@
 namespace Lavi\Middleware;
 
 use Lavi\Request\IRequest;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Server\MiddlewareInterface;
 
 class Handler implements \Iterator
 {
+    private ContainerInterface $container;
     private array $middlewares;
     private $default;
 
     private int $index = 0;
 
-    public function __construct(array $middleware, callable $default)
+    public function __construct(ContainerInterface $container, array $middleware, callable $default)
     {
+        $this->container = $container;
         $this->middlewares = $middleware;
         $this->default = $default;
     }
@@ -30,7 +32,7 @@ class Handler implements \Iterator
 
     public function current(): IMiddleware
     {
-        return new ($this->middlewares[$this->index])();
+        return $this->container->make($this->middlewares[$this->index]);
     }
 
     public function next(): self

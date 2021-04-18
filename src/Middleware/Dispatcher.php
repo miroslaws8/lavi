@@ -3,6 +3,7 @@
 namespace Lavi\Middleware;
 
 use Lavi\Request\IRequest;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -10,10 +11,12 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class Dispatcher
 {
+    private ContainerInterface $container;
     private array $middlewares;
 
-    public function __construct(array $middlewares)
+    public function __construct(ContainerInterface $container, array $middlewares)
     {
+        $this->container = $container;
         $this->middlewares = $middlewares;
     }
 
@@ -29,7 +32,11 @@ class Dispatcher
 
     public function dispatch(IRequest $request, callable $default): ResponseInterface
     {
-        $handler = new Handler($this->middlewares, $default);
+        $handler = $this->container->make(Handler::class, [
+            'middleware' => $this->middlewares,
+            'default' => $default
+        ]);
+
         return $handler->handle($request);
     }
 

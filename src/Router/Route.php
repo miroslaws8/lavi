@@ -38,6 +38,6 @@ class Route
 
     public function getMiddlewares(): array
     {
-        return $this->params[static::ROUTE_MIDDLEWARES];
+        return array_key_exists(static::ROUTE_MIDDLEWARES, $this->params) ? $this->params[static::ROUTE_MIDDLEWARES] : [];
     }
 }
