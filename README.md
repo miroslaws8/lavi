@@ -2,46 +2,53 @@
 
 ### Install
 
-1. Clone the project;
-2. Run composer install;
-3. Write the configuration file in `public/config.php`
-4. It's all !
+`composer require itsimiro/lavi`
 
-### Config
-
-
-```php
-    $config = new Lavi\Config\Config();
-
-    // Load to config file
-    $config->load('path_to_file_config.php');
-
-    // Get all config params
-    $config->all();
-
-    // Get param by key
-    $config->get('key');
-```
+DI Container is a required dependency.
+Install any package that implements ContainerInterface.
 
 ### Routes
+
+The framework router currently supports GET and POST requests.
 
 You can specify the namespace explicitly in the controller name.
 
 ``` php
-$router->add('',
-    ['controller' => 'MyNamespace\HomeController', 'action' => 'index']
-);
+$router = new \Lavi\Router\Router();
+
+$router->get('/', [
+    'controller' => 'MyNamespace\HomeController',
+    'action' => 'index'
+]);
 ```
 
 It is also possible to declare it.
 
 ``` php
-$router->add('', [
+$router->post('/users/', [
     'namespace'  => 'MyNamespace',
-    'controller' => 'HomeController',
-    'action'     => 'index'
+    'controller' => 'UserController',
+    'action'     => 'add'
 ]);
 ```
+
+### Middlewares
+
+You can use middlewares for routes. Execution occurs one at a time.
+
+``` php
+$router->get('/me/', [
+    'namespace' => 'App\\Controllers',
+    'controller' => 'UserController',
+    'action' => 'retrieve',
+    'middlewares' => [\App\Middlewares\AuthMiddleware::class]
+]);
+```
+
+### Request
+
+It is possible to use different requests, by default we use Symfony Request.
+If you want to use your own request class, then it must implement the `IRequest` interface.
 
 ### Controllers
 
