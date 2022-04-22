@@ -24,6 +24,9 @@ class Lavi
         $this->request = $request;
     }
 
+    /**
+     * @throws LaviException
+     */
     public function run(IRouter $router)
     {
         $handler = $router->dispatch($this->request->getUri());

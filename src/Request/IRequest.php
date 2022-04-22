@@ -8,5 +8,5 @@ interface IRequest
     public function get(string $key);
     public function set(string $key, mixed $value);
     public function has(string $key): bool;
-    public function getUri(): string;
+    public function getUri();
 }
